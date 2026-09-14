@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCRES PRO 2.0 — Procesador de Rutas</title>
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@12.0.0/dist/handsontable.full.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        :root {
+            /* Palette: Modern HSL */
+            --primary: 220, 90%, 56%;
+            /* #3b82f6 - Blue */
+            --secondary: 217, 33%, 17%;
+            /* #1e293b - Slate 800 */
+            --accent: 25, 95%, 53%;
+            /* #f97316 - Orange */
+            --success: 150, 80%, 40%;
+            /* #10b981 - Green */
+            --danger: 340, 80%, 60%;
+            /* #f43f5e - Rose */
+
+            --bg-1: #0f172a;
+            --bg-2: #1e293b;
+
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at 10% 20%, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 90%);
+            min-height: 100vh;
+            color: #ecf0f1;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+            color: #334155;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* Login Section */
+        #login-screen {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .brand-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.75rem;
+            line-height: 1.1;
+            background: linear-gradient(110deg, #60a5fa, #a78bfa 45%, #f97316);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.35rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-version {
+            display: inline-block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            padding: 3px 10px;
+            border-radius: 50px;
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+        }
+
+        .letter-spacing-2 {
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .login-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+
+        .login-input:focus {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: #60a5fa;
+            color: white;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+        }
+
+        /* App Layout */
+        .app-header {
+            background: linear-gradient(110deg, #1e293b 0%, #0f172a 55%, #172554 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tabs {
+            padding: 0 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: #f8fafc;
+            padding-top: 1rem;
+        }
+
+        .nav-link {
+            border: none !important;
+            padding: 10px 24px;
+            font-weight: 500;
+            color: #64748b;
+            border-radius: 8px 8px 0 0 !important;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #3b82f6;
+            background: #f1f5f9;
+        }
+
+        .nav-link.active {
+            color: #3b82f6 !important;
+            background: white !important;
+            font-weight: 600;
+            box-shadow: 0 -4px 0 0 #3b82f6 inset;
+        }
+
+        /* Content Area */
+        .app-content {
+            padding: 2rem;
+            background: white;
+            flex: 1;
+        }
+
+        .action-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 34px -18px rgba(15, 23, 42, 0.35);
+        }
+
+        .section-title {
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .btn-modern {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary-modern {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary-modern:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+            color: white;
+        }
+
+        .btn-success-modern {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success-modern:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            color: white;
+        }
+
+        .btn-dark-modern {
+            background: linear-gradient(135deg, #334155, #1e293b);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.3);
+        }
+
+        /* Console */
+        .console-output {
+            background: #0f172a;
+            color: #4ade80;
+            font-family: 'Consolas', 'Monaco', monospace;
+            padding: 1.5rem;
+            border-radius: 18px;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #334155;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .console-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .console-output::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 8px;
+        }
+
+        /* Helpers */
+        .badge-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-connected {
+            background: #4ade80;
+            box-shadow: 0 0 10px #4ade80;
+        }
+
+        .status-disconnected {
+            background: #f87171;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* FIX CRÍTICO: Fuerza la altura de las tablas */
+        #ptos-table,
+        #base-table {
+            height: 500px !important;
+            width: 100%;
+            min-height: 500px;
+            display: block;
+            background: white;
+            /* Para que resalte sobre el fondo oscuro */
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="text-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+            <h5 class="mt-3 fw-bold text-dark" id="loadingText">Cargando...</h5>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <!-- Floating shapes for bg effect -->
+        <div
+            style="position: absolute; width: 300px; height: 300px; background: #3b82f6; filter: blur(120px); opacity: 0.2; top: -50px; right: -50px; border-radius: 50%;">
+        </div>
+        <div
+            style="position: absolute; width: 400px; height: 400px; background: #f97316; filter: blur(140px); opacity: 0.15; bottom: -100px; left: -100px; border-radius: 50%;">
+        </div>
+
+        <div class="login-card animate__animated animate__zoomIn">
+            <div class="mb-4">
+                <div class="brand-logo">SCRES</div>
+                <div class="brand-version mb-2">PRO 2.0</div>
+                <div class="text-white-50 small letter-spacing-2">System Control &amp; Routing</div>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="mb-3 text-start">
+                    <label class="form-label text-white-50 small ms-1">Email</label>
+                    <input type="email" class="form-control login-input" id="email" placeholder="usuario@ejemplo.com"
+                        required>
+                </div>
+                <div class="mb-4 text-start">
+                    <label class="form-label text-white-50 small ms-1">Contraseña</label>
+                    <input type="password" class="form-control login-input" id="password" placeholder="••••••••"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary-modern w-100 py-3">INICIAR SESIÓN</button>
+            </form>
+
+            <div class="mt-4 pt-3 border-top border-secondary">
+                <small class="text-white-50">By Jorge Garavagno © 2026</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="main-container" id="main-app" style="display: none;">
+        <div class="app-header">
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fs-4 fw-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">SCRES</span>
+                    <span class="brand-version">PRO 2.0</span>
+                </div>
+                <small class="text-white-50">Procesador de Rutas Urbanas</small>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-sm btn-outline-light rounded-pill" onclick="logout()">Cerrar Sesión</button>
+                <div class="user-profile">
+                    <div class="badge-status status-connected"></div>
+                    <span id="userEmailDisplay" class="small">usuario@scres.com</span>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" href="#ptos" data-bs-toggle="tab">Puntos de Ruta</a></li>
+            <li class="nav-item" id="admin-tab" style="display: none;"><a class="nav-link" href="#base"
+                    data-bs-toggle="tab">Base de Datos (Firestore)</a></li>
+        </ul>
+
+        <div class="app-content">
+            <div class="tab-content h-100">
+
+                <!-- TAB 1: Process -->
+                <div class="tab-pane active h-100" id="ptos">
+                    <div class="row h-100 g-4">
+                        <div class="col-lg-9 d-flex flex-column">
+                            <div class="bg-light border rounded-3 overflow-hidden flex-grow-1 shadow-sm">
+                                <div id="ptos-table" style="height: 100%; width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 d-flex flex-column gap-3">
+                            <div class="action-card">
+                                <h6 class="section-title mb-3">Acciones</h6>
+                                <button class="btn btn-success-modern w-100 mb-2" onclick="verificarDatos()">
+                                    <span>🔎 Verificar</span>
+                                </button>
+                                <p class="small text-muted mb-0">Verificador de líneas</p>
+                                <hr class="my-3">
+
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="fw-bold">Arduino / USB</small>
+                                        <span class="badge-status status-disconnected" id="usbDot"></span>
+                                    </div>
+                                    <button class="btn btn-outline-secondary btn-sm w-100 mb-2"
+                                        onclick="connectArduino()">Conectar USB</button>
+                                    <button class="btn btn-primary-modern btn-sm w-100" id="btnSendArduino"
+                                        onclick="sendToArduino()" disabled>Enviar a Arduino</button>
+                                </div>
+
+                                <div class="mb-0">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="fw-bold">Agente Local</small>
+                                        <span id="agentStatus" class="small text-muted">Offline</span>
+                                    </div>
+                                    <button class="btn btn-dark-modern btn-sm w-100" id="btnSendAgent"
+                                        onclick="sendToLocalAgent()" disabled>Enviar Script</button>
+                                </div>
+                            </div>
+
+                            <div class="console-output flex-grow-1" id="output">
+                                <div class="text-muted opacity-50">Esperando procesamiento...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Database -->
+                <div class="tab-pane h-100" id="base">
+                    <div class="d-flex flex-column h-100">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h4 class="mb-1">Base de Datos de Unidades</h4>
+                                <p class="text-muted small mb-0">Sincronizado con Firebase Firestore Cloud</p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-danger btn-sm" onclick="migrateDataToFirebase()">⚠️
+                                    Migrar Local a Nube</button>
+                                <button class="btn btn-primary-modern" onclick="saveUnidadesToFirestore()">💾 Guardar
+                                    Cambios en Nube</button>
+                            </div>
+                        </div>
+                        <div class="bg-light border rounded-3 overflow-hidden flex-grow-1 shadow-sm">
+                            <div id="base-table" style="height: 100%; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: datos faltantes de una fila -->
+    <div class="modal fade" id="routeModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header border-0 bg-light rounded-top-4">
+                    <h5 class="modal-title fw-bold">⚙️ Completar datos faltantes</h5>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="routeForm">
+                        <div class="alert alert-warning py-2 small">
+                            Fila <span id="filaActualText" class="fw-bold">...</span>
+                            <div class="mt-1">Ruta: <span id="rutaActualText" class="fw-bold">...</span></div>
+                        </div>
+
+                        <div class="mb-3 d-none" id="unidadBlock">
+                            <label class="form-label small fw-bold text-muted">UNIDAD ASIGNADA</label>
+                            <input type="text" class="form-control form-control-lg bg-light" id="unidad"
+                                placeholder="Ej: 1024">
+                        </div>
+
+                        <div class="alert alert-success py-2 small d-none" id="fechasDetectadas">
+                            📅 Fecha y hora tomada de la tabla: <span id="fechasDetectadasText"
+                                class="fw-bold"></span>
+                        </div>
+
+                        <div class="d-none" id="fechasBlock">
+                            <label class="form-label small fw-bold text-muted">FECHA Y HORA</label>
+                            <input type="datetime-local" class="form-control" id="fechaHora">
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="aplicarRestantes" checked>
+                            <label class="form-check-label small" for="aplicarRestantes">
+                                Aplicar estos datos a las demás filas de esta ruta a las que les falte lo mismo
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0 pt-0 d-block">
+                    <button type="button" class="btn btn-primary-modern w-100" id="submitRoute">CONFIRMAR</button>
+                    <button type="button" class="btn btn-link w-100 text-muted small mt-1" id="skipRoute">Omitir esta
+                        fila</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@12.0.0/dist/handsontable.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+
+    <!-- FIREBASE SETUP (Module) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // ==========================================
+        // ⚠️ CONFIGURACIÓN DE FIREBASE
+        // ==========================================
+        const firebaseConfig = {
+            // TODO: PEGAR AQUÍ TU CONFIGURACIÓN DE FIREBASE
+            apiKey: "AIzaSyBVxsfxvhE3ZtkoG_CLWyhZai2QLtei2Es",
+            authDomain: "scres-182f6.firebaseapp.com",
+            databaseURL: "https://scres-182f6-default-rtdb.firebaseio.com",
+            projectId: "scres-182f6",
+            storageBucket: "scres-182f6.firebasestorage.app", // Corrected bucket domain usually
+            messagingSenderId: "824274971298",
+            appId: "1:824274971298:web:8eff93c5c9b4c09d12c5fb",
+            measurementId: "G-HSP0E7J954"
+        };
+
+        let app, auth, db;
+        let userData = null;
+
+        // Variables Globales App
+        window.ptosHot = null;
+        window.baseHot = null;
+        window.generatedData = [];
+        window.role = '';
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase initialized");
+        } catch (e) {
+            console.error("Firebase init error", e);
+            alert("⚠️ Error iniciando Firebase: " + e.message + "\n\nPor favor edita el archivo index.html y coloca tus credenciales de Firebase.");
+        }
+
+        // ==========================================
+        // AUTH
+        // ==========================================
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+
+            showLoading(true, "Autenticando...");
+
+            try {
+                // Check if dummy config
+                if (firebaseConfig.apiKey === "API_KEY_AQUI") {
+                    throw new Error("Configuración de Firebase incompleta. Edita el código.");
+                }
+                await signInWithEmailAndPassword(auth, email, pass);
+                // Listener will handle UI switch
+            } catch (error) {
+                showLoading(false);
+                alert("Error de Login: " + error.message);
+
+                // FALLBACK ONLY FOR DEV/DEMO if Firebase fails
+                if (email === 'admin@test.com' && pass === '123456') {
+                    alert("⚠️ MODO DEBUG OFFLINE ACTIVADO");
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('main-app').style.display = 'flex';
+                    initTables();
+                }
+            }
+        };
+
+        window.logout = () => {
+            signOut(auth).then(() => window.location.reload());
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userData = user;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'flex';
+                document.getElementById('userEmailDisplay').textContent = user.email;
+
+                // Simple Admin Check by email domain or specific email
+                // En producción usar custom claims
+                // Check Admin by specific email or UID
+                const admins = ['jorgegaravagno@gmail.com'];
+                if (admins.includes(user.email) || user.uid === 'RbKjvuTv34OTW81kbTtX11bTe133') {
+                    window.role = 'admin';
+                    document.getElementById('admin-tab').style.display = 'block';
+                }
+
+                initTables();
+                loadUnidadesFromFirestore();
+                showLoading(false);
+            } else {
+                showLoading(false);
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('main-app').style.display = 'none';
+            }
+        });
+
+
+        // ==========================================
+        // FIRESTORE
+        // ==========================================
+
+        // Cargar Base de Datos
+        window.loadUnidadesFromFirestore = async () => {
+            if (!db) return;
+            try {
+                console.log("Loading modules...");
+                const querySnapshot = await getDocs(collection(db, "unidades"));
+                const fireData = [];
+                querySnapshot.forEach((doc) => {
+                    fireData.push(doc.data().row); // Guardamos la fila entera como array
+                });
+
+                if (fireData.length > 0) {
+                    // Headers
+                    fireData.unshift(['Unidades', 'IMEI', 'ID', 'IMEI LENG', 'ID LENG', '', '', '']);
+                    if (window.baseHot) window.baseHot.loadData(fireData);
+                } else {
+                    console.log("No data in Firestore, loading default...");
+                }
+            } catch (e) {
+                console.error("Error loading DB", e);
+            }
+        };
+
+        // Guardar cambios
+        window.saveUnidadesToFirestore = async () => {
+            if (window.role !== 'admin') { alert("Solo admins"); return; }
+            if (!db) return;
+
+            showLoading(true, "Guardando en nube...");
+            try {
+                const data = window.baseHot.getData();
+                // Batch write logic can be complex for limits. 
+                // For simplicity, we overwrite documents using ID as key or just cleanup
+                // Since this is a simple table, we might just re-upload each row.
+
+                // Note: Real world app should handle batch limits (500).
+                const batch = writeBatch(db);
+
+                // Clear old or just overwrite. For simplicity assume overwrite by Unidad ID
+                data.forEach((row, index) => {
+                    if (index === 0) return; // Skip Header
+                    const unidadId = row[0];
+                    if (!unidadId) return;
+
+                    const docRef = doc(db, "unidades", String(unidadId));
+                    batch.set(docRef, { row: row });
+                });
+
+                await batch.commit();
+                alert("✅ Datos guardados correctamente en Firebase!");
+            } catch (e) {
+                console.error(e);
+                alert("❌ Error guardando: " + e.message);
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        // Migración Inicial
+        window.migrateDataToFirebase = async () => {
+            if (!confirm("¿Seguro que quieres subir los datos locales a Firebase? Esto sobreescribirá datos existentes con el mismo ID.")) return;
+            // Get local data fallback
+            const baseData = [
+                ['Unidades', 'IMEI', 'ID', 'IMEI LENG', 'ID LENG', '', '', ''],
+                [1016, 863071012736986, '003535', 15, 6, '', '', ''],
+                [1017, 863071012769128, '003438', 15, 6, '', '', ''],
+                [1018, 863071013879850, '003519', 15, 6, '', -346421699523926, -583595314025879],
+                // ... (Truncated for brevity, just using what was in memory/UI)
+            ];
+
+            // Try to get from current table if loaded and has data (more than just header)
+            const tableData = window.baseHot ? window.baseHot.getData() : [];
+            const dataToMigrate = (tableData.length > 1) ? tableData : baseData;
+
+            if (!db) return;
+            showLoading(true, "Migrando...");
+            try {
+                const batch = writeBatch(db);
+                dataToMigrate.forEach((row, index) => {
+                    if (index === 0) return;
+                    const unidadId = row[0];
+                    if (!unidadId) return;
+                    const docRef = doc(db, "unidades", String(unidadId));
+                    batch.set(docRef, { row: row });
+                });
+                await batch.commit();
+                alert("✅ Migración completada.");
+            } catch (e) {
+                alert("Error: " + e.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+    </script>
+
+    <!-- Legacy / Logic Scripts (Adapted) -->
+    <script>
+        // UI Helpers
+        function showLoading(show, text = "Cargando...") {
+            const el = document.getElementById('loading');
+            document.getElementById('loadingText').innerText = text;
+            el.style.display = show ? 'flex' : 'none';
+        }
+
+        function initTables() {
+            const container1 = document.getElementById('ptos-table');
+            const container2 = document.getElementById('base-table');
+
+            if (!container1) return;
+
+            // Clean
+            container1.innerHTML = '';
+            container2.innerHTML = '';
+
+            window.ptosHot = new Handsontable(container1, {
+                data: [['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']],
+                rowHeaders: true,
+                colHeaders: true,
+                height: '100%',
+                width: '100%',
+                licenseKey: 'non-commercial-and-evaluation',
+                minRows: 50,
+                minCols: 16,
+                contextMenu: true,
+                manualColumnResize: true,
+                stretchH: 'all',
+                className: 'htCenter', // Center text
+            });
+
+            // Base Data (initially empty or local fallback until Firebase loads)
+            window.baseHot = new Handsontable(container2, {
+                data: [['Unidades', 'IMEI', 'ID', 'IMEI LENG', 'ID LENG', '', '', '']],
+                rowHeaders: true,
+                colHeaders: true,
+                height: '100%',
+                width: '100%',
+                licenseKey: 'non-commercial-and-evaluation',
+                minRows: 50,
+                minCols: 9,
+                contextMenu: true,
+                manualColumnResize: true,
+                stretchH: 'all'
+            });
+        }
+
+        // ==========================================
+        // ARDUINO & USB
+        // ==========================================
+        let port, writer;
+        let isArduinoConnected = false;
+
+        async function connectArduino() {
+            if ("serial" in navigator) {
+                try {
+                    port = await navigator.serial.requestPort();
+                    await port.open({ baudRate: 9600 });
+                    const textEncoder = new TextEncoderStream();
+                    const writableStreamClosed = textEncoder.readable.pipeTo(port.writable);
+                    writer = textEncoder.writable.getWriter();
+
+                    isArduinoConnected = true;
+                    updateArduinoUI(true);
+                    alert("🔌 Arduino Conectado!");
+                } catch (err) {
+                    console.error('Error:', err);
+                    alert('❌ Error conectando Arduino: ' + err.message);
+                }
+            } else {
+                alert('⚠️ Navegador no compatible con USB Serial. Use Chrome.');
+            }
+        }
+
+        function updateArduinoUI(connected) {
+            const dot = document.getElementById('usbDot');
+            const btn = document.getElementById('btnSendArduino');
+            if (connected) {
+                dot.className = 'badge-status status-connected';
+                if (window.generatedData.length > 0) btn.disabled = false;
+            } else {
+                dot.className = 'badge-status status-disconnected';
+                btn.disabled = true;
+            }
+        }
+
+        async function sendToArduino() {
+            if (!isArduinoConnected || !writer) return alert('Conecta el Arduino primero');
+
+            const btn = document.getElementById('btnSendArduino');
+            btn.disabled = true; btn.innerHTML = 'Enviando...';
+
+            try {
+                for (let i = 0; i < window.generatedData.length; i++) {
+                    const line = window.generatedData[i];
+                    if (line.trim()) {
+                        await writer.write(line + "\n");
+                        logConsole(`🔌 USB: Enviando ${i + 1}/${window.generatedData.length}...`);
+                        await new Promise(r => setTimeout(r, 1000));
+                    }
+                }
+                alert('✅ Envío a Arduino completado');
+            } catch (e) {
+                alert('❌ Error USB: ' + e.message);
+            } finally {
+                btn.disabled = false; btn.innerText = 'Enviar a Arduino';
+            }
+        }
+
+        // ==========================================
+        // LOCAL AGENT
+        // ==========================================
+        async function sendToLocalAgent() {
+            if (window.generatedData.length === 0) return alert('No hay datos procesados para enviar.');
+
+            const btn = document.getElementById('btnSendAgent');
+            const statusLabel = document.getElementById('agentStatus');
+
+            statusLabel.textContent = 'Buscando...';
+
+            try {
+                await fetch('http://127.0.0.1:5000/status');
+            } catch (e) {
+                alert('❌ Agente local no encontrado. Ejecuta el .exe primero.');
+                statusLabel.textContent = 'Offline';
+                return;
+            }
+
+            btn.disabled = true; btn.innerHTML = 'Enviando...';
+            statusLabel.textContent = 'Enviando...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/enviar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lines: window.generatedData })
+                });
+                const res = await response.json();
+
+                if (response.ok) {
+                    alert(`✅ Agente: ${res.processed} líneas enviadas.`);
+                    statusLabel.textContent = 'Online';
+                } else {
+                    throw new Error(res.error);
+                }
+            } catch (e) {
+                alert('❌ Error Agente: ' + e.message);
+                statusLabel.textContent = 'Error';
+            } finally {
+                btn.disabled = false; btn.innerText = 'Enviar Script';
+            }
+        }
+
+        // ==========================================
+        // FECHA / HORA PEGADAS EN LA TABLA
+        // ==========================================
+        const COL_UNIDAD = 14;
+        const COL_FECHA_HORA = 15;
+
+        const FORMATOS_FECHA = [
+            'YYYY-MM-DD', 'YYYY/MM/DD',
+            'DD/MM/YYYY', 'D/M/YYYY', 'DD-MM-YYYY', 'D-M-YYYY',
+            'DD/MM/YY', 'D/M/YY', 'DD-MM-YY', 'D-M-YY'
+        ];
+        const FORMATOS_HORA = ['HH:mm:ss', 'HH:mm', 'H:mm:ss', 'H:mm'];
+
+        const FORMATOS_FECHA_HORA = FORMATOS_FECHA
+            .flatMap(f => [f].concat(FORMATOS_HORA.flatMap(h => [`${f} ${h}`, `${f}T${h}`])))
+            .concat(['DDMMYYHHmmss']);
+
+        // Acepta texto pegado desde Excel/Sheets, objetos Date y seriales de Excel.
+        function parseFechaHora(value) {
+            if (value === null || value === undefined) return null;
+            if (value instanceof Date) {
+                const md = moment(value);
+                return md.isValid() ? md : null;
+            }
+
+            const texto = String(value).trim();
+            if (!texto) return null;
+
+            if (/^\d+([.,]\d+)?$/.test(texto)) {
+                const serial = parseFloat(texto.replace(',', '.'));
+                if (serial > 20000 && serial < 80000) {
+                    return moment('1899-12-30', 'YYYY-MM-DD').add(Math.round(serial * 86400), 'seconds');
+                }
+            }
+
+            const estricto = moment(texto.replace(/\s+/g, ' '), FORMATOS_FECHA_HORA, true);
+            if (estricto.isValid()) return estricto;
+
+            const libre = moment(texto);
+            return libre.isValid() ? libre : null;
+        }
+
+        const FORMATO_SALIDA = 'YYYY-MM-DD HH:mm';
+
+        // Campos fijos posteriores a lat/long: dirección, velocidad, energía, satélites,
+        // edad GPS, tipo de posición y HDOP (los 2 primeros dígitos completan la longitud).
+        const COLA_RUS02 = '2929900000702021011';
+        const COLA_RUS03 = '2929900000734261011';
+
+        // Fecha y hora de la fila (columna única), o null si no trae un valor utilizable.
+        function fechaDeFila(row) {
+            return parseFechaHora(row[COL_FECHA_HORA]);
+        }
+
+        function unidadDeFila(row) {
+            const valor = row[COL_UNIDAD];
+            if (valor === null || valor === undefined) return null;
+            const texto = String(valor).trim();
+            return texto || null;
+        }
+
+        function textoCorto(valor, largo = 40) {
+            const texto = valor ? String(valor).trim() : '(sin ruta)';
+            return texto.length > largo ? texto.substring(0, largo - 3) + '...' : texto;
+        }
+
+        // Pide por pantalla únicamente los datos que le faltan a una fila.
+        // Resuelve null si el usuario decide omitirla.
+        function pedirDatosFaltantes(modal, ctx) {
+            const unidadBlock = document.getElementById('unidadBlock');
+            const fechasBlock = document.getElementById('fechasBlock');
+            const avisoFechas = document.getElementById('fechasDetectadas');
+            const btnOk = document.getElementById('submitRoute');
+            const btnSkip = document.getElementById('skipRoute');
+
+            document.getElementById('routeForm').reset();
+            document.getElementById('filaActualText').innerText = `${ctx.numeroFila} — ${textoCorto(ctx.direccion)}`;
+            document.getElementById('rutaActualText').innerText = textoCorto(ctx.ruta);
+
+            unidadBlock.classList.toggle('d-none', !ctx.faltaUnidad);
+            fechasBlock.classList.toggle('d-none', !ctx.faltaFecha);
+            avisoFechas.classList.toggle('d-none', ctx.faltaFecha);
+
+            if (!ctx.faltaFecha) {
+                document.getElementById('fechasDetectadasText').innerText = ctx.fecha.format(FORMATO_SALIDA);
+            } else {
+                document.getElementById('fechaHora').value = moment().format('YYYY-MM-DDTHH:mm');
+            }
+
+            return new Promise(resolve => {
+                const cerrar = (valor) => {
+                    btnOk.removeEventListener('click', onOk);
+                    btnSkip.removeEventListener('click', onSkip);
+                    modal.hide();
+                    setTimeout(() => resolve(valor), 300);
+                };
+
+                const onOk = () => {
+                    const aplicarRestantes = document.getElementById('aplicarRestantes').checked;
+                    let unidad = null, fecha = null;
+
+                    if (ctx.faltaUnidad) {
+                        unidad = document.getElementById('unidad').value.trim();
+                        if (!unidad) { alert('Indica la unidad asignada'); return; }
+                    }
+
+                    if (ctx.faltaFecha) {
+                        const valor = document.getElementById('fechaHora').value;
+                        fecha = parseFechaHora(valor);
+                        if (!fecha) { alert('Completa la fecha y hora'); return; }
+                    }
+
+                    cerrar({ unidad: unidad, fecha: fecha, aplicarRestantes: aplicarRestantes });
+                };
+
+                const onSkip = () => cerrar(null);
+
+                btnOk.addEventListener('click', onOk);
+                btnSkip.addEventListener('click', onSkip);
+                modal.show();
+            });
+        }
+
+        // ==========================================
+        // PROCESAMIENTO
+        // ==========================================
+        async function verificarDatos() {
+            showLoading(true, "Verificando líneas...");
+            window.generatedData = [];
+
+            try {
+                const allData = window.ptosHot.getData();
+                const data = allData.slice(1).filter(r => r[0] && r[0].toString().trim() !== '');
+
+                if (data.length === 0) throw new Error('Tabla vacía o sin datos válidos.');
+
+                const modalElement = document.getElementById('routeModal');
+                const modal = new bootstrap.Modal(modalElement, { backdrop: 'static', keyboard: false });
+
+                showLoading(false); // Hide loading to show modal logic
+
+                // Revisión fila por fila: solo se pregunta lo que falta en esa fila.
+                const pendientes = [];
+                const omitidas = [];
+                const porDefectoRuta = {}; // ruta -> datos reutilizables elegidos por el usuario
+
+                for (const row of data) {
+                    const realIdx = allData.indexOf(row);
+                    const numeroFila = realIdx + 1;
+                    const ruta = row[5] ? row[5].toString().trim() : '';
+
+                    if (!row[12] || !row[13]) {
+                        omitidas.push(`Fila ${numeroFila}: sin latitud/longitud`);
+                        continue;
+                    }
+
+                    const reusable = porDefectoRuta[ruta] || {};
+                    let unidad = unidadDeFila(row) || reusable.unidad || null;
+                    let fecha = fechaDeFila(row) || (reusable.fecha ? reusable.fecha.clone() : null);
+
+                    if (!unidad || !fecha) {
+                        const respuesta = await pedirDatosFaltantes(modal, {
+                            numeroFila: numeroFila,
+                            direccion: row[0],
+                            ruta: ruta,
+                            faltaUnidad: !unidad,
+                            faltaFecha: !fecha,
+                            fecha: fecha
+                        });
+
+                        if (!respuesta) {
+                            omitidas.push(`Fila ${numeroFila}: omitida por el usuario`);
+                            continue;
+                        }
+
+                        unidad = unidad || respuesta.unidad;
+                        fecha = fecha || respuesta.fecha;
+
+                        if (respuesta.aplicarRestantes) {
+                            porDefectoRuta[ruta] = {
+                                unidad: respuesta.unidad || reusable.unidad,
+                                fecha: respuesta.fecha || reusable.fecha
+                            };
+                        }
+                    }
+
+                    pendientes.push({ row: row, realIdx: realIdx, unidad: unidad, fecha: fecha });
+                }
+
+                showLoading(true, "Generando tramas...");
+                let logText = '';
+                let totalRus02 = 0, totalRus03 = 0;
+
+                // Build output
+                // BASE DATA viene de HotTable (que fue cargada de Firebase)
+                const baseData = window.baseHot.getData();
+
+                pendientes.forEach((item) => {
+                    const row = item.row;
+                    const realIdx = item.realIdx;
+
+                    // Update UI Cells
+                    window.ptosHot.setDataAtCell(realIdx, COL_UNIDAD, item.unidad);
+                    window.ptosHot.setDataAtCell(realIdx, COL_FECHA_HORA, item.fecha.format(FORMATO_SALIDA));
+
+                    // Logic
+                    const lat = parseFloat(row[12]), long = parseFloat(row[13]);
+                    const procLat = (lat < 0 ? '-' : '') + Math.abs(lat).toString().replace('.', '').padEnd(15, '0').slice(0, 7);
+                    const procLong = (long < 0 ? '-' : '') + Math.abs(long).toString().replace('.', '').padEnd(15, '0').slice(0, 6);
+
+                    window.ptosHot.setDataAtCell(realIdx, 12, procLat);
+                    window.ptosHot.setDataAtCell(realIdx, 13, procLong);
+
+                    const hora = item.fecha.clone().add(3, 'hours');
+
+                    const uRow = baseData.find(x => x[0] == item.unidad);
+                    const imei = uRow ? uRow[1] : '#N/A';
+                    const id = uRow ? uRow[2] : '#N/A';
+
+                    // PROTOCOL LINES
+                    const ts = hora.format('DDMMYYHHmmss');
+
+                    const rus03 = `>RUS03,${ts}${procLat}${procLong}${COLA_RUS03},${imei},0000000${row[4] || '0'},001;ID=${id};#IP1:000C;*07<`;
+                    // Mensaje de posición de la misma lectura: se arma solo si aún no existe.
+                    const rus02 = `>RUS02,${ts}${procLat}${procLong}${COLA_RUS02},${imei};ID=${id};#IP1:0014;*4A<`;
+
+                    logText += `Fila ${realIdx + 1} | Unidad ${item.unidad} | ${item.fecha.format(FORMATO_SALIDA)}\n`;
+
+                    if (!window.generatedData.includes(rus02)) {
+                        window.generatedData.push(rus02);
+                        totalRus02++;
+                        logText += `  ${rus02}\n`;
+                    } else {
+                        logText += `  (RUS02 ya existente, no duplicado)\n`;
+                    }
+
+                    window.generatedData.push(rus03);
+                    totalRus03++;
+                    logText += `  ${rus03}\n`;
+                });
+
+                window.ptosHot.render();
+
+                const resumen = `✅ ${totalRus03} líneas procesadas — ${window.generatedData.length} tramas listas para enviar ` +
+                    `(${totalRus03} RUS03 + ${totalRus02} RUS02)`;
+
+                logText = `${resumen}\n\n` + logText;
+
+                if (omitidas.length > 0) {
+                    logText += `\n--- ${omitidas.length} fila(s) sin procesar ---\n` + omitidas.join('\n') + '\n';
+                }
+
+                logConsole(logText.trim() || 'Ningún dato generado.');
+
+                // Enable Buttons
+                if (window.generatedData.length > 0) {
+                    document.getElementById('btnSendAgent').disabled = false;
+                    if (isArduinoConnected) document.getElementById('btnSendArduino').disabled = false;
+                }
+
+                alert(`${totalRus03} líneas procesadas.\n${window.generatedData.length} tramas listas para enviar ` +
+                    `(${totalRus03} RUS03 + ${totalRus02} RUS02).` +
+                    (omitidas.length > 0 ? `\n⚠️ ${omitidas.length} fila(s) sin procesar (ver consola).` : ''));
+
+            } catch (e) {
+                alert("❌ Error en la verificación: " + e.message);
+                console.error(e);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Alias histórico del botón "Procesar Datos".
+        const processData = verificarDatos;
+
+        function logConsole(text) {
+            const out = document.getElementById('output');
+            out.innerText = text;
+            out.scrollTop = out.scrollHeight;
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check internet or auth stuff
+            // The Firebase listener handles most of the init
+        });
+
+    </script>
+</body>
+
+</html>
