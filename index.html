@@ -926,9 +926,27 @@
         const FORMATO_SALIDA = 'YYYY-MM-DD HH:mm';
 
         // Campos fijos posteriores a lat/long: dirección, velocidad, energía, satélites,
-        // edad GPS, tipo de posición y HDOP (los 2 primeros dígitos completan la longitud).
-        const COLA_RUS02 = '2929900000702021011';
-        const COLA_RUS03 = '2929900000734261011';
+        // edad GPS, tipo de posición y HDOP.
+        const COLA_RUS02 = '29900000702021011';
+        const COLA_RUS03 = '29900000734261011';
+
+        // Coordenada en formato GTE: signo + dígitos fijos, con escala 1e5.
+        function encodeCoord(valor, digitos) {
+            const signo = valor < 0 ? '-' : '';
+            const n = Math.round(Math.abs(valor) * 100000);
+            return signo + String(n).padStart(digitos, '0').slice(-digitos);
+        }
+
+        // Checksum del protocolo: XOR byte a byte desde '>' hasta '*' inclusive.
+        function checksumTrama(cuerpo) {
+            let v = 0;
+            for (let i = 0; i < cuerpo.length; i++) v ^= cuerpo.charCodeAt(i) & 0xFF;
+            return v.toString(16).toUpperCase().padStart(2, '0');
+        }
+
+        function cerrarTrama(cuerpo) {
+            return cuerpo + checksumTrama(cuerpo) + '<';
+        }
 
         // Fecha y hora de la fila (columna única), o null si no trae un valor utilizable.
         function fechaDeFila(row) {
@@ -1088,8 +1106,8 @@
 
                     // Logic
                     const lat = parseFloat(row[12]), long = parseFloat(row[13]);
-                    const procLat = (lat < 0 ? '-' : '') + Math.abs(lat).toString().replace('.', '').padEnd(15, '0').slice(0, 7);
-                    const procLong = (long < 0 ? '-' : '') + Math.abs(long).toString().replace('.', '').padEnd(15, '0').slice(0, 6);
+                    const procLat = encodeCoord(lat, 7);
+                    const procLong = encodeCoord(long, 8);
 
                     window.ptosHot.setDataAtCell(realIdx, 12, procLat);
                     window.ptosHot.setDataAtCell(realIdx, 13, procLong);
@@ -1103,9 +1121,9 @@
                     // PROTOCOL LINES
                     const ts = hora.format('DDMMYYHHmmss');
 
-                    const rus03 = `>RUS03,${ts}${procLat}${procLong}${COLA_RUS03},${imei},0000000${row[4] || '0'},001;ID=${id};#IP1:000C;*07<`;
+                    const rus03 = cerrarTrama(`>RUS03,${ts}${procLat}${procLong}${COLA_RUS03},${imei},0000000${row[4] || '0'},001;ID=${id};#IP1:000C;*`);
                     // Mensaje de posición de la misma lectura: se arma solo si aún no existe.
-                    const rus02 = `>RUS02,${ts}${procLat}${procLong}${COLA_RUS02},${imei};ID=${id};#IP1:0014;*4A<`;
+                    const rus02 = cerrarTrama(`>RUS02,${ts}${procLat}${procLong}${COLA_RUS02},${imei};ID=${id};#IP1:0014;*`);
 
                     logText += `Fila ${realIdx + 1} | Unidad ${item.unidad} | ${item.fecha.format(FORMATO_SALIDA)}\n`;
 
