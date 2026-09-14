@@ -417,11 +417,19 @@
                                 </button>
                                 <p class="small text-muted mb-2">Verificador de líneas</p>
 
-                                <label class="form-label section-title mb-1" for="modoRus02">ID de mensaje RUS02</label>
+                                <label class="form-label section-title mb-1" for="modoRus02">Formato del RUS02</label>
                                 <select class="form-select form-select-sm" id="modoRus02">
-                                    <option value="0014" selected>#IP1:0014 (protocolo)</option>
-                                    <option value="000C">#IP1:000C (igual al RUS03)</option>
-                                    <option value="SEQ">Secuencial (0014, 0015, ...)</option>
+                                    <option value="CLON" selected>Clonado del RUS03 (#IP1:000C)</option>
+                                    <option value="PDF">Como el PDF (#IP1:0014, *4A)</option>
+                                    <option value="CALC">Como el PDF, checksum calculado</option>
+                                    <option value="SEQ">Como el PDF, #IP1 secuencial</option>
+                                </select>
+
+                                <label class="form-label section-title mb-1 mt-2" for="horaRus02">Hora del RUS02</label>
+                                <select class="form-select form-select-sm" id="horaRus02">
+                                    <option value="IGUAL" selected>Igual al RUS03 (+3 h)</option>
+                                    <option value="LOCAL">Sin desfase (hora de la tabla)</option>
+                                    <option value="AHORA">Hora actual (prueba)</option>
                                 </select>
                                 <hr class="my-3">
 
@@ -955,19 +963,31 @@
             return cuerpo + checksumTrama(cuerpo) + '<';
         }
 
-        // Identificador de mensaje del RUS02. La plataforma acepta el RUS03 con 000C;
-        // el modo secuencial evita repetir el mismo identificador en cada posición.
         let secuenciaRus02 = 0x14;
 
-        function idMensajeRus02() {
-            const modo = (document.getElementById('modoRus02') || {}).value || '0014';
-            if (modo === '000C') return '000C';
-            if (modo === 'SEQ') {
-                const valor = secuenciaRus02;
-                secuenciaRus02 = (secuenciaRus02 + 1) & 0xFFFF;
-                return valor.toString(16).toUpperCase().padStart(4, '0');
-            }
-            return '0014';
+        function siguienteSecuencia() {
+            const valor = secuenciaRus02;
+            secuenciaRus02 = (secuenciaRus02 + 1) & 0xFFFF;
+            return valor.toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        // Variantes del mensaje de posición. "CLON" copia todo lo del RUS03 que sí entra
+        // en la plataforma (campos fijos, #IP1 y checksum calculado) y solo saca el tag.
+        // Hora del mensaje de posición: la misma del RUS03, sin el desfase de 3 h,
+        // o el instante actual para descartar un filtro por antigüedad.
+        function tsRus02(hora) {
+            const modo = (document.getElementById('horaRus02') || {}).value || 'IGUAL';
+            if (modo === 'LOCAL') return hora.clone().subtract(3, 'hours').format('DDMMYYHHmmss');
+            if (modo === 'AHORA') return moment().add(3, 'hours').format('DDMMYYHHmmss');
+            return hora.format('DDMMYYHHmmss');
+        }
+
+        function construirRus02(ts, procLat, procLong, imei, id) {
+            const modo = (document.getElementById('modoRus02') || {}).value || 'CLON';
+            const cola = modo === 'CLON' ? COLA_RUS03 : COLA_RUS02;
+            const ip1 = modo === 'CLON' ? '000C' : (modo === 'SEQ' ? siguienteSecuencia() : '0014');
+            const cuerpo = `>RUS02,${ts}${procLat}${procLong}${cola},${imei};ID=${id};#IP1:${ip1};*`;
+            return modo === 'PDF' ? cuerpo + '4A<' : cerrarTrama(cuerpo);
         }
 
         // Fecha y hora de la fila (columna única), o null si no trae un valor utilizable.
@@ -1145,7 +1165,7 @@
 
                     const rus03 = cerrarTrama(`>RUS03,${ts}${procLat}${procLong}${COLA_RUS03},${imei},0000000${row[4] || '0'},001;ID=${id};#IP1:000C;*`);
                     // Mensaje de posición de la misma lectura: se arma solo si aún no existe.
-                    const rus02 = cerrarTrama(`>RUS02,${ts}${procLat}${procLong}${COLA_RUS02},${imei};ID=${id};#IP1:${idMensajeRus02()};*`);
+                    const rus02 = construirRus02(tsRus02(hora), procLat, procLong, imei, id);
 
                     logText += `Fila ${realIdx + 1} | Unidad ${item.unidad} | ${item.fecha.format(FORMATO_SALIDA)}\n`;
 
