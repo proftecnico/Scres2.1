@@ -7,34 +7,24 @@
     <title>SCRES PRO 2.0 — Procesador de Rutas</title>
     <link rel="icon" href="logo.jpg" type="image/jpeg">
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-    <!-- Libraries -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@12.0.0/dist/handsontable.full.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
         :root {
-            /* Palette: Modern HSL */
             --primary: 220, 90%, 56%;
-            /* #3b82f6 - Blue */
             --secondary: 217, 33%, 17%;
-            /* #1e293b - Slate 800 */
             --accent: 25, 95%, 53%;
-            /* #f97316 - Orange */
             --success: 150, 80%, 40%;
-            /* #10b981 - Green */
             --danger: 340, 80%, 60%;
-            /* #f43f5e - Rose */
-
             --bg-1: #0f172a;
             --bg-2: #1e293b;
-
             --glass-bg: rgba(255, 255, 255, 0.95);
             --glass-border: rgba(255, 255, 255, 0.2);
             --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
@@ -63,7 +53,6 @@
             animation: fadeIn 0.8s ease;
         }
 
-        /* Login Section */
         #login-screen {
             flex: 1;
             display: flex;
@@ -134,7 +123,6 @@
             box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
         }
 
-        /* App Layout */
         .app-header {
             background: linear-gradient(110deg, #1e293b 0%, #0f172a 55%, #172554 100%);
             color: white;
@@ -183,7 +171,6 @@
             box-shadow: 0 -4px 0 0 #3b82f6 inset;
         }
 
-        /* Content Area */
         .app-content {
             padding: 2rem;
             background: white;
@@ -255,7 +242,6 @@
             box-shadow: 0 4px 12px rgba(30, 41, 59, 0.3);
         }
 
-        /* Console */
         .console-output {
             background: #0f172a;
             color: #4ade80;
@@ -280,7 +266,6 @@
             border-radius: 8px;
         }
 
-        /* Helpers */
         .badge-status {
             width: 10px;
             height: 10px;
@@ -311,7 +296,6 @@
             justify-content: center;
         }
 
-        /* FIX CRÍTICO: Fuerza la altura de las tablas */
         #ptos-table,
         #base-table {
             height: 500px !important;
@@ -319,15 +303,31 @@
             min-height: 500px;
             display: block;
             background: white;
-            /* Para que resalte sobre el fondo oscuro */
             z-index: 1;
+        }
+
+        /* ==========================================
+           FIX: el modal está fuera de .main-container, así que
+           hereda el color claro de body (#ecf0f1) sobre el fondo
+           blanco del modal. Se fuerza un color oscuro para todo
+           el contenido del modal (checkbox, labels, etc.).
+           ========================================== */
+        .modal-content {
+            color: #334155;
+        }
+        .modal-content .form-check-label {
+            color: #334155;
+        }
+        .modal-content .form-label,
+        .modal-content .small,
+        .modal-content small {
+            color: #475569;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Loading Spinner -->
     <div id="loading" class="loading-overlay" style="display: none;">
         <div class="text-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
@@ -335,9 +335,7 @@
         </div>
     </div>
 
-    <!-- Login Screen -->
     <div id="login-screen">
-        <!-- Floating shapes for bg effect -->
         <div
             style="position: absolute; width: 300px; height: 300px; background: #3b82f6; filter: blur(120px); opacity: 0.2; top: -50px; right: -50px; border-radius: 50%;">
         </div>
@@ -372,7 +370,6 @@
         </div>
     </div>
 
-    <!-- Main App -->
     <div class="main-container" id="main-app" style="display: none;">
         <div class="app-header">
             <div>
@@ -400,7 +397,6 @@
         <div class="app-content">
             <div class="tab-content h-100">
 
-                <!-- TAB 1: Process -->
                 <div class="tab-pane active h-100" id="ptos">
                     <div class="row h-100 g-4">
                         <div class="col-lg-9 d-flex flex-column">
@@ -415,22 +411,8 @@
                                 <button class="btn btn-success-modern w-100 mb-2" onclick="verificarDatos()">
                                     <span>🔎 Verificar</span>
                                 </button>
-                                <p class="small text-muted mb-2">Verificador de líneas</p>
+                                <p class="small text-muted mb-3">Verificador de líneas</p>
 
-                                <label class="form-label section-title mb-1" for="modoRus02">Formato del RUS02</label>
-                                <select class="form-select form-select-sm" id="modoRus02">
-                                    <option value="CLON" selected>Clonado del RUS03 (#IP1:000C)</option>
-                                    <option value="PDF">Como el PDF (#IP1:0014, *4A)</option>
-                                    <option value="CALC">Como el PDF, checksum calculado</option>
-                                    <option value="SEQ">Como el PDF, #IP1 secuencial</option>
-                                </select>
-
-                                <label class="form-label section-title mb-1 mt-2" for="horaRus02">Hora del RUS02</label>
-                                <select class="form-select form-select-sm" id="horaRus02">
-                                    <option value="IGUAL" selected>Igual al RUS03 (+3 h)</option>
-                                    <option value="LOCAL">Sin desfase (hora de la tabla)</option>
-                                    <option value="AHORA">Hora actual (prueba)</option>
-                                </select>
                                 <hr class="my-3">
 
                                 <div class="mb-3">
@@ -461,7 +443,6 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: Database -->
                 <div class="tab-pane h-100" id="base">
                     <div class="d-flex flex-column h-100">
                         <div class="d-flex justify-content-between align-items-start mb-3">
@@ -486,7 +467,6 @@
         </div>
     </div>
 
-    <!-- Modal: datos faltantes de una fila -->
     <div class="modal fade" id="routeModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -533,27 +513,21 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/handsontable@12.0.0/dist/handsontable.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 
-    <!-- FIREBASE SETUP (Module) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // ==========================================
-        // ⚠️ CONFIGURACIÓN DE FIREBASE
-        // ==========================================
         const firebaseConfig = {
-            // TODO: PEGAR AQUÍ TU CONFIGURACIÓN DE FIREBASE
             apiKey: "AIzaSyBVxsfxvhE3ZtkoG_CLWyhZai2QLtei2Es",
             authDomain: "scres-182f6.firebaseapp.com",
             databaseURL: "https://scres-182f6-default-rtdb.firebaseio.com",
             projectId: "scres-182f6",
-            storageBucket: "scres-182f6.firebasestorage.app", // Corrected bucket domain usually
+            storageBucket: "scres-182f6.firebasestorage.app",
             messagingSenderId: "824274971298",
             appId: "1:824274971298:web:8eff93c5c9b4c09d12c5fb",
             measurementId: "G-HSP0E7J954"
@@ -562,7 +536,6 @@
         let app, auth, db;
         let userData = null;
 
-        // Variables Globales App
         window.ptosHot = null;
         window.baseHot = null;
         window.generatedData = [];
@@ -575,12 +548,9 @@
             console.log("Firebase initialized");
         } catch (e) {
             console.error("Firebase init error", e);
-            alert("⚠️ Error iniciando Firebase: " + e.message + "\n\nPor favor edita el archivo index.html y coloca tus credenciales de Firebase.");
+            alert("⚠️ Error iniciando Firebase: " + e.message);
         }
 
-        // ==========================================
-        // AUTH
-        // ==========================================
         window.handleLogin = async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -589,17 +559,14 @@
             showLoading(true, "Autenticando...");
 
             try {
-                // Check if dummy config
                 if (firebaseConfig.apiKey === "API_KEY_AQUI") {
                     throw new Error("Configuración de Firebase incompleta. Edita el código.");
                 }
                 await signInWithEmailAndPassword(auth, email, pass);
-                // Listener will handle UI switch
             } catch (error) {
                 showLoading(false);
                 alert("Error de Login: " + error.message);
 
-                // FALLBACK ONLY FOR DEV/DEMO if Firebase fails
                 if (email === 'admin@test.com' && pass === '123456') {
                     alert("⚠️ MODO DEBUG OFFLINE ACTIVADO");
                     document.getElementById('login-screen').style.display = 'none';
@@ -620,9 +587,6 @@
                 document.getElementById('main-app').style.display = 'flex';
                 document.getElementById('userEmailDisplay').textContent = user.email;
 
-                // Simple Admin Check by email domain or specific email
-                // En producción usar custom claims
-                // Check Admin by specific email or UID
                 const admins = ['jorgegaravagno@gmail.com'];
                 if (admins.includes(user.email) || user.uid === 'RbKjvuTv34OTW81kbTtX11bTe133') {
                     window.role = 'admin';
@@ -639,35 +603,24 @@
             }
         });
 
-
-        // ==========================================
-        // FIRESTORE
-        // ==========================================
-
-        // Cargar Base de Datos
         window.loadUnidadesFromFirestore = async () => {
             if (!db) return;
             try {
-                console.log("Loading modules...");
                 const querySnapshot = await getDocs(collection(db, "unidades"));
                 const fireData = [];
                 querySnapshot.forEach((doc) => {
-                    fireData.push(doc.data().row); // Guardamos la fila entera como array
+                    fireData.push(doc.data().row);
                 });
 
                 if (fireData.length > 0) {
-                    // Headers
                     fireData.unshift(['Unidades', 'IMEI', 'ID', 'IMEI LENG', 'ID LENG', '', '', '']);
                     if (window.baseHot) window.baseHot.loadData(fireData);
-                } else {
-                    console.log("No data in Firestore, loading default...");
                 }
             } catch (e) {
                 console.error("Error loading DB", e);
             }
         };
 
-        // Guardar cambios
         window.saveUnidadesToFirestore = async () => {
             if (window.role !== 'admin') { alert("Solo admins"); return; }
             if (!db) return;
@@ -675,19 +628,12 @@
             showLoading(true, "Guardando en nube...");
             try {
                 const data = window.baseHot.getData();
-                // Batch write logic can be complex for limits. 
-                // For simplicity, we overwrite documents using ID as key or just cleanup
-                // Since this is a simple table, we might just re-upload each row.
-
-                // Note: Real world app should handle batch limits (500).
                 const batch = writeBatch(db);
 
-                // Clear old or just overwrite. For simplicity assume overwrite by Unidad ID
                 data.forEach((row, index) => {
-                    if (index === 0) return; // Skip Header
+                    if (index === 0) return;
                     const unidadId = row[0];
                     if (!unidadId) return;
-
                     const docRef = doc(db, "unidades", String(unidadId));
                     batch.set(docRef, { row: row });
                 });
@@ -702,19 +648,15 @@
             }
         };
 
-        // Migración Inicial
         window.migrateDataToFirebase = async () => {
-            if (!confirm("¿Seguro que quieres subir los datos locales a Firebase? Esto sobreescribirá datos existentes con el mismo ID.")) return;
-            // Get local data fallback
+            if (!confirm("¿Seguro que quieres subir los datos locales a Firebase?")) return;
             const baseData = [
                 ['Unidades', 'IMEI', 'ID', 'IMEI LENG', 'ID LENG', '', '', ''],
                 [1016, 863071012736986, '003535', 15, 6, '', '', ''],
                 [1017, 863071012769128, '003438', 15, 6, '', '', ''],
                 [1018, 863071013879850, '003519', 15, 6, '', -346421699523926, -583595314025879],
-                // ... (Truncated for brevity, just using what was in memory/UI)
             ];
 
-            // Try to get from current table if loaded and has data (more than just header)
             const tableData = window.baseHot ? window.baseHot.getData() : [];
             const dataToMigrate = (tableData.length > 1) ? tableData : baseData;
 
@@ -740,9 +682,7 @@
 
     </script>
 
-    <!-- Legacy / Logic Scripts (Adapted) -->
     <script>
-        // UI Helpers
         function showLoading(show, text = "Cargando...") {
             const el = document.getElementById('loading');
             document.getElementById('loadingText').innerText = text;
@@ -755,7 +695,6 @@
 
             if (!container1) return;
 
-            // Clean
             container1.innerHTML = '';
             container2.innerHTML = '';
 
@@ -771,10 +710,9 @@
                 contextMenu: true,
                 manualColumnResize: true,
                 stretchH: 'all',
-                className: 'htCenter', // Center text
+                className: 'htCenter',
             });
 
-            // Base Data (initially empty or local fallback until Firebase loads)
             window.baseHot = new Handsontable(container2, {
                 data: [['Unidades', 'IMEI', 'ID', 'IMEI LENG', 'ID LENG', '', '', '']],
                 rowHeaders: true,
@@ -790,9 +728,6 @@
             });
         }
 
-        // ==========================================
-        // ARDUINO & USB
-        // ==========================================
         let port, writer;
         let isArduinoConnected = false;
 
@@ -852,9 +787,6 @@
             }
         }
 
-        // ==========================================
-        // LOCAL AGENT
-        // ==========================================
         async function sendToLocalAgent() {
             if (window.generatedData.length === 0) return alert('No hay datos procesados para enviar.');
 
@@ -896,9 +828,6 @@
             }
         }
 
-        // ==========================================
-        // FECHA / HORA PEGADAS EN LA TABLA
-        // ==========================================
         const COL_UNIDAD = 14;
         const COL_FECHA_HORA = 15;
 
@@ -913,7 +842,6 @@
             .flatMap(f => [f].concat(FORMATOS_HORA.flatMap(h => [`${f} ${h}`, `${f}T${h}`])))
             .concat(['DDMMYYHHmmss']);
 
-        // Acepta texto pegado desde Excel/Sheets, objetos Date y seriales de Excel.
         function parseFechaHora(value) {
             if (value === null || value === undefined) return null;
             if (value instanceof Date) {
@@ -940,19 +868,23 @@
 
         const FORMATO_SALIDA = 'YYYY-MM-DD HH:mm';
 
-        // Campos fijos posteriores a lat/long: dirección, velocidad, energía, satélites,
-        // edad GPS, tipo de posición y HDOP.
-        const COLA_RUS02 = '29900000702021011';
+        // ==========================================
+        // CONSTANTES DEL PROTOCOLO
+        // ==========================================
         const COLA_RUS03 = '29900000734261011';
+        const COLA_RUS04 = '29900000734261011';
+        const IP1_RUS03 = '000C';
+        const IP1_RUS04 = '000C';
+        const CODIGO_ENTRADA_DEFAULT = '001';
+        const ESTADO_ENTRADA_DEFAULT = '1';
+        const DESFASE_RUS04_SEGUNDOS = 2;
 
-        // Coordenada en formato GTE: signo + dígitos fijos, con escala 1e5.
         function encodeCoord(valor, digitos) {
             const signo = valor < 0 ? '-' : '';
             const n = Math.round(Math.abs(valor) * 100000);
             return signo + String(n).padStart(digitos, '0').slice(-digitos);
         }
 
-        // Checksum del protocolo: XOR byte a byte desde '>' hasta '*' inclusive.
         function checksumTrama(cuerpo) {
             let v = 0;
             for (let i = 0; i < cuerpo.length; i++) v ^= cuerpo.charCodeAt(i) & 0xFF;
@@ -963,34 +895,13 @@
             return cuerpo + checksumTrama(cuerpo) + '<';
         }
 
-        let secuenciaRus02 = 0x14;
-
-        function siguienteSecuencia() {
-            const valor = secuenciaRus02;
-            secuenciaRus02 = (secuenciaRus02 + 1) & 0xFFFF;
-            return valor.toString(16).toUpperCase().padStart(4, '0');
+        function construirRus04(ts, latRaw, longRaw, imei, codigo, estado, id) {
+            const latStr = encodeCoord(latRaw, 7);
+            const longStr = encodeCoord(longRaw, 8);
+            const cuerpo = `>RUS04,${ts}${latStr}${longStr}${COLA_RUS04},${imei},${codigo},${estado};ID=${id};#IP1:${IP1_RUS04};*`;
+            return cerrarTrama(cuerpo);
         }
 
-        // Variantes del mensaje de posición. "CLON" copia todo lo del RUS03 que sí entra
-        // en la plataforma (campos fijos, #IP1 y checksum calculado) y solo saca el tag.
-        // Hora del mensaje de posición: la misma del RUS03, sin el desfase de 3 h,
-        // o el instante actual para descartar un filtro por antigüedad.
-        function tsRus02(hora) {
-            const modo = (document.getElementById('horaRus02') || {}).value || 'IGUAL';
-            if (modo === 'LOCAL') return hora.clone().subtract(3, 'hours').format('DDMMYYHHmmss');
-            if (modo === 'AHORA') return moment().add(3, 'hours').format('DDMMYYHHmmss');
-            return hora.format('DDMMYYHHmmss');
-        }
-
-        function construirRus02(ts, procLat, procLong, imei, id) {
-            const modo = (document.getElementById('modoRus02') || {}).value || 'CLON';
-            const cola = modo === 'CLON' ? COLA_RUS03 : COLA_RUS02;
-            const ip1 = modo === 'CLON' ? '000C' : (modo === 'SEQ' ? siguienteSecuencia() : '0014');
-            const cuerpo = `>RUS02,${ts}${procLat}${procLong}${cola},${imei};ID=${id};#IP1:${ip1};*`;
-            return modo === 'PDF' ? cuerpo + '4A<' : cerrarTrama(cuerpo);
-        }
-
-        // Fecha y hora de la fila (columna única), o null si no trae un valor utilizable.
         function fechaDeFila(row) {
             return parseFechaHora(row[COL_FECHA_HORA]);
         }
@@ -1007,8 +918,6 @@
             return texto.length > largo ? texto.substring(0, largo - 3) + '...' : texto;
         }
 
-        // Pide por pantalla únicamente los datos que le faltan a una fila.
-        // Resuelve null si el usuario decide omitirla.
         function pedirDatosFaltantes(modal, ctx) {
             const unidadBlock = document.getElementById('unidadBlock');
             const fechasBlock = document.getElementById('fechasBlock');
@@ -1064,12 +973,12 @@
             });
         }
 
-        // ==========================================
-        // PROCESAMIENTO
-        // ==========================================
         async function verificarDatos() {
             showLoading(true, "Verificando líneas...");
             window.generatedData = [];
+
+            const rus04Keys = new Set();
+            let rus04Duplicados = 0;
 
             try {
                 const allData = window.ptosHot.getData();
@@ -1080,12 +989,11 @@
                 const modalElement = document.getElementById('routeModal');
                 const modal = new bootstrap.Modal(modalElement, { backdrop: 'static', keyboard: false });
 
-                showLoading(false); // Hide loading to show modal logic
+                showLoading(false);
 
-                // Revisión fila por fila: solo se pregunta lo que falta en esa fila.
                 const pendientes = [];
                 const omitidas = [];
-                const porDefectoRuta = {}; // ruta -> datos reutilizables elegidos por el usuario
+                const porDefectoRuta = {};
 
                 for (const row of data) {
                     const realIdx = allData.indexOf(row);
@@ -1132,49 +1040,54 @@
 
                 showLoading(true, "Generando tramas...");
                 let logText = '';
-                let totalRus02 = 0, totalRus03 = 0;
+                let totalRus04 = 0, totalRus03 = 0;
 
-                // Build output
-                // BASE DATA viene de HotTable (que fue cargada de Firebase)
                 const baseData = window.baseHot.getData();
 
                 pendientes.forEach((item) => {
                     const row = item.row;
                     const realIdx = item.realIdx;
 
-                    // Update UI Cells
+                    // Solo se actualizan Unidad (14) y Fecha y hora (15).
+                    // Las columnas 12 (Latitud) y 13 (Longitud) se dejan intactas
+                    // tal como las cargó el usuario.
                     window.ptosHot.setDataAtCell(realIdx, COL_UNIDAD, item.unidad);
                     window.ptosHot.setDataAtCell(realIdx, COL_FECHA_HORA, item.fecha.format(FORMATO_SALIDA));
 
-                    // Logic
                     const lat = parseFloat(row[12]), long = parseFloat(row[13]);
                     const procLat = encodeCoord(lat, 7);
                     const procLong = encodeCoord(long, 8);
 
-                    window.ptosHot.setDataAtCell(realIdx, 12, procLat);
-                    window.ptosHot.setDataAtCell(realIdx, 13, procLong);
+                    // NOTA: las siguientes dos líneas se eliminaron porque sobreescribían
+                    // la tabla con las coordenadas codificadas.
+                    // window.ptosHot.setDataAtCell(realIdx, 12, procLat);
+                    // window.ptosHot.setDataAtCell(realIdx, 13, procLong);
 
-                    const hora = item.fecha.clone().add(3, 'hours');
+                    const horaBase = item.fecha.clone().add(3, 'hours');
+                    const horaRus04 = horaBase.clone().add(DESFASE_RUS04_SEGUNDOS, 'seconds');
 
                     const uRow = baseData.find(x => x[0] == item.unidad);
                     const imei = uRow ? uRow[1] : '#N/A';
                     const id = uRow ? uRow[2] : '#N/A';
 
-                    // PROTOCOL LINES
-                    const ts = hora.format('DDMMYYHHmmss');
+                    const ts03 = horaBase.format('DDMMYYHHmmss');
+                    const ts04 = horaRus04.format('DDMMYYHHmmss');
 
-                    const rus03 = cerrarTrama(`>RUS03,${ts}${procLat}${procLong}${COLA_RUS03},${imei},0000000${row[4] || '0'},001;ID=${id};#IP1:000C;*`);
-                    // Mensaje de posición de la misma lectura: se arma solo si aún no existe.
-                    const rus02 = construirRus02(tsRus02(hora), procLat, procLong, imei, id);
+                    const rus03 = cerrarTrama(`>RUS03,${ts03}${procLat}${procLong}${COLA_RUS03},${imei},0000000${row[4] || '0'},001;ID=${id};#IP1:${IP1_RUS03};*`);
+
+                    const rus04 = construirRus04(ts04, lat, long, imei, CODIGO_ENTRADA_DEFAULT, ESTADO_ENTRADA_DEFAULT, id);
 
                     logText += `Fila ${realIdx + 1} | Unidad ${item.unidad} | ${item.fecha.format(FORMATO_SALIDA)}\n`;
 
-                    if (!window.generatedData.includes(rus02)) {
-                        window.generatedData.push(rus02);
-                        totalRus02++;
-                        logText += `  ${rus02}\n`;
+                    const claveRus04 = `RUS04|${imei}|${ts04}|${CODIGO_ENTRADA_DEFAULT}|${ESTADO_ENTRADA_DEFAULT}`;
+                    if (!rus04Keys.has(claveRus04)) {
+                        rus04Keys.add(claveRus04);
+                        window.generatedData.push(rus04);
+                        totalRus04++;
+                        logText += `  ${rus04}\n`;
                     } else {
-                        logText += `  (RUS02 ya existente, no duplicado)\n`;
+                        rus04Duplicados++;
+                        logText += `  (RUS04 duplicado para ${imei} @ ${ts04}, omitido)\n`;
                     }
 
                     window.generatedData.push(rus03);
@@ -1185,7 +1098,7 @@
                 window.ptosHot.render();
 
                 const resumen = `✅ ${totalRus03} líneas procesadas — ${window.generatedData.length} tramas listas para enviar ` +
-                    `(${totalRus03} RUS03 + ${totalRus02} RUS02)`;
+                    `(${totalRus03} RUS03 + ${totalRus04} RUS04${rus04Duplicados > 0 ? `, ${rus04Duplicados} duplicados omitidos` : ''})`;
 
                 logText = `${resumen}\n\n` + logText;
 
@@ -1195,14 +1108,14 @@
 
                 logConsole(logText.trim() || 'Ningún dato generado.');
 
-                // Enable Buttons
                 if (window.generatedData.length > 0) {
                     document.getElementById('btnSendAgent').disabled = false;
                     if (isArduinoConnected) document.getElementById('btnSendArduino').disabled = false;
                 }
 
                 alert(`${totalRus03} líneas procesadas.\n${window.generatedData.length} tramas listas para enviar ` +
-                    `(${totalRus03} RUS03 + ${totalRus02} RUS02).` +
+                    `(${totalRus03} RUS03 + ${totalRus04} RUS04` +
+                    (rus04Duplicados > 0 ? `, ${rus04Duplicados} duplicados omitidos` : '') + `).` +
                     (omitidas.length > 0 ? `\n⚠️ ${omitidas.length} fila(s) sin procesar (ver consola).` : ''));
 
             } catch (e) {
@@ -1213,7 +1126,6 @@
             }
         }
 
-        // Alias histórico del botón "Procesar Datos".
         const processData = verificarDatos;
 
         function logConsole(text) {
@@ -1222,10 +1134,7 @@
             out.scrollTop = out.scrollHeight;
         }
 
-        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            // Check internet or auth stuff
-            // The Firebase listener handles most of the init
         });
 
     </script>
