@@ -297,7 +297,8 @@
         }
 
         #ptos-table,
-        #base-table {
+        #base-table,
+        #sensado-table {
             height: 500px !important;
             width: 100%;
             min-height: 500px;
@@ -306,18 +307,17 @@
             z-index: 1;
         }
 
-        /* ==========================================
-           FIX: el modal está fuera de .main-container, así que
+        /* Fix: el modal está fuera de .main-container, así que
            hereda el color claro de body (#ecf0f1) sobre el fondo
-           blanco del modal. Se fuerza un color oscuro para todo
-           el contenido del modal (checkbox, labels, etc.).
-           ========================================== */
+           blanco del modal. Se fuerza color oscuro explícito. */
         .modal-content {
             color: #334155;
         }
+
         .modal-content .form-check-label {
             color: #334155;
         }
+
         .modal-content .form-label,
         .modal-content .small,
         .modal-content small {
@@ -388,16 +388,25 @@
             </div>
         </div>
 
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link active" href="#ptos" data-bs-toggle="tab">Puntos de Ruta</a></li>
-            <li class="nav-item" id="admin-tab" style="display: none;"><a class="nav-link" href="#base"
-                    data-bs-toggle="tab">Base de Datos (Firestore)</a></li>
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="tab-ptos" href="#ptos" data-bs-toggle="tab" role="tab">Puntos de Ruta</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="tab-sensado" href="#sensado" data-bs-toggle="tab" role="tab">Sensado</a>
+            </li>
+            <li class="nav-item" id="admin-tab" style="display: none;" role="presentation">
+                <a class="nav-link" id="tab-base" href="#base" data-bs-toggle="tab" role="tab">Base de Datos (Firestore)</a>
+            </li>
         </ul>
 
         <div class="app-content">
             <div class="tab-content h-100">
 
-                <div class="tab-pane active h-100" id="ptos">
+                <!-- ============================================================ -->
+                <!-- TAB 1: Puntos de Ruta (RUS03 + RUS04)                         -->
+                <!-- ============================================================ -->
+                <div class="tab-pane fade show active h-100" id="ptos" role="tabpanel">
                     <div class="row h-100 g-4">
                         <div class="col-lg-9 d-flex flex-column">
                             <div class="bg-light border rounded-3 overflow-hidden flex-grow-1 shadow-sm">
@@ -443,7 +452,63 @@
                     </div>
                 </div>
 
-                <div class="tab-pane h-100" id="base">
+                <!-- ============================================================ -->
+                <!-- TAB 2: Sensado (solo RUS04)                                   -->
+                <!-- ============================================================ -->
+                <div class="tab-pane fade h-100" id="sensado" role="tabpanel">
+                    <div class="row h-100 g-4">
+                        <div class="col-lg-9 d-flex flex-column">
+                            <div class="bg-light border rounded-3 overflow-hidden flex-grow-1 shadow-sm">
+                                <div id="sensado-table" style="height: 100%; width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 d-flex flex-column gap-3">
+                            <div class="action-card">
+                                <h6 class="section-title mb-3">Sensado de Trabajo</h6>
+                                <p class="small text-muted mb-3">
+                                    Pegá las filas con RFID y se generarán solo los Sensados para enviar.
+                                </p>
+                                <button class="btn btn-success-modern w-100 mb-2" onclick="generarRus04()">
+                                    <span>⚡ Generar RUS04</span>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm w-100 mb-3"
+                                    onclick="limpiarSensado()">Limpiar tabla</button>
+
+                                <hr class="my-3">
+
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="fw-bold">Arduino / USB</small>
+                                        <span class="badge-status status-disconnected" id="usbDotSensado"></span>
+                                    </div>
+                                    <button class="btn btn-outline-secondary btn-sm w-100 mb-2"
+                                        onclick="connectArduinoSensado()">Conectar USB</button>
+                                    <button class="btn btn-primary-modern btn-sm w-100" id="btnSendArduinoSensado"
+                                        onclick="sendToArduinoSensado()" disabled>Enviar a Arduino</button>
+                                </div>
+
+                                <div class="mb-0">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="fw-bold">Agente Local</small>
+                                        <span id="agentStatusSensado" class="small text-muted">Offline</span>
+                                    </div>
+                                    <button class="btn btn-dark-modern btn-sm w-100" id="btnSendAgentSensado"
+                                        onclick="sendToLocalAgentSensado()" disabled>Enviar Script</button>
+                                </div>
+                            </div>
+
+                            <div class="console-output flex-grow-1" id="outputSensado">
+                                <div class="text-muted opacity-50">Esperando procesamiento...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- TAB 3: Base de Datos (admin)                                   -->
+                <!-- ============================================================ -->
+                <div class="tab-pane fade h-100" id="base" role="tabpanel">
                     <div class="d-flex flex-column h-100">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
@@ -538,7 +603,9 @@
 
         window.ptosHot = null;
         window.baseHot = null;
+        window.sensadoHot = null;
         window.generatedData = [];
+        window.generatedSensado = [];
         window.role = '';
 
         try {
@@ -692,11 +759,13 @@
         function initTables() {
             const container1 = document.getElementById('ptos-table');
             const container2 = document.getElementById('base-table');
+            const container3 = document.getElementById('sensado-table');
 
             if (!container1) return;
 
             container1.innerHTML = '';
             container2.innerHTML = '';
+            if (container3) container3.innerHTML = '';
 
             window.ptosHot = new Handsontable(container1, {
                 data: [['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']],
@@ -726,7 +795,53 @@
                 manualColumnResize: true,
                 stretchH: 'all'
             });
+
+            if (container3) {
+                window.sensadoHot = new Handsontable(container3, {
+                    data: [['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']],
+                    rowHeaders: true,
+                    colHeaders: true,
+                    height: '100%',
+                    width: '100%',
+                    licenseKey: 'non-commercial-and-evaluation',
+                    minRows: 50,
+                    minCols: 16,
+                    contextMenu: true,
+                    manualColumnResize: true,
+                    stretchH: 'all',
+                    className: 'htCenter',
+                });
+            }
         }
+
+        // ==========================================
+        // FIX: Handsontable inicializa con 0×0 cuando su contenedor
+        // está dentro de un tab oculto. Al mostrarse el tab hay que
+        // refrescar dimensiones y redibujar.
+        // ==========================================
+        function refreshHotForTab(target) {
+            setTimeout(() => {
+                try {
+                    if (target === '#ptos' && window.ptosHot) {
+                        window.ptosHot.refreshDimensions();
+                        window.ptosHot.render();
+                    } else if (target === '#sensado' && window.sensadoHot) {
+                        window.sensadoHot.refreshDimensions();
+                        window.sensadoHot.render();
+                    } else if (target === '#base' && window.baseHot) {
+                        window.baseHot.refreshDimensions();
+                        window.baseHot.render();
+                    }
+                } catch (e) {
+                    console.warn("Error refrescando Handsontable:", e);
+                }
+            }, 50);
+        }
+
+        document.addEventListener('shown.bs.tab', function (e) {
+            const target = e.target.getAttribute('href');
+            refreshHotForTab(target);
+        });
 
         let port, writer;
         let isArduinoConnected = false;
@@ -742,6 +857,7 @@
 
                     isArduinoConnected = true;
                     updateArduinoUI(true);
+                    updateArduinoSensadoUI(true);
                     alert("🔌 Arduino Conectado!");
                 } catch (err) {
                     console.error('Error:', err);
@@ -751,6 +867,8 @@
                 alert('⚠️ Navegador no compatible con USB Serial. Use Chrome.');
             }
         }
+
+        function connectArduinoSensado() { return connectArduino(); }
 
         function updateArduinoUI(connected) {
             const dot = document.getElementById('usbDot');
@@ -764,8 +882,22 @@
             }
         }
 
+        function updateArduinoSensadoUI(connected) {
+            const dot = document.getElementById('usbDotSensado');
+            const btn = document.getElementById('btnSendArduinoSensado');
+            if (!dot || !btn) return;
+            if (connected) {
+                dot.className = 'badge-status status-connected';
+                if (window.generatedSensado.length > 0) btn.disabled = false;
+            } else {
+                dot.className = 'badge-status status-disconnected';
+                btn.disabled = true;
+            }
+        }
+
         async function sendToArduino() {
             if (!isArduinoConnected || !writer) return alert('Conecta el Arduino primero');
+            if (window.generatedData.length === 0) return alert('No hay tramas generadas.');
 
             const btn = document.getElementById('btnSendArduino');
             btn.disabled = true; btn.innerHTML = 'Enviando...';
@@ -776,6 +908,30 @@
                     if (line.trim()) {
                         await writer.write(line + "\n");
                         logConsole(`🔌 USB: Enviando ${i + 1}/${window.generatedData.length}...`);
+                        await new Promise(r => setTimeout(r, 1000));
+                    }
+                }
+                alert('✅ Envío a Arduino completado');
+            } catch (e) {
+                alert('❌ Error USB: ' + e.message);
+            } finally {
+                btn.disabled = false; btn.innerText = 'Enviar a Arduino';
+            }
+        }
+
+        async function sendToArduinoSensado() {
+            if (!isArduinoConnected || !writer) return alert('Conecta el Arduino primero');
+            if (window.generatedSensado.length === 0) return alert('No hay tramas RUS04 generadas.');
+
+            const btn = document.getElementById('btnSendArduinoSensado');
+            btn.disabled = true; btn.innerHTML = 'Enviando...';
+
+            try {
+                for (let i = 0; i < window.generatedSensado.length; i++) {
+                    const line = window.generatedSensado[i];
+                    if (line.trim()) {
+                        await writer.write(line + "\n");
+                        logConsoleSensado(`🔌 USB: Enviando ${i + 1}/${window.generatedSensado.length}...`);
                         await new Promise(r => setTimeout(r, 1000));
                     }
                 }
@@ -811,6 +967,47 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ lines: window.generatedData })
+                });
+                const res = await response.json();
+
+                if (response.ok) {
+                    alert(`✅ Agente: ${res.processed} líneas enviadas.`);
+                    statusLabel.textContent = 'Online';
+                } else {
+                    throw new Error(res.error);
+                }
+            } catch (e) {
+                alert('❌ Error Agente: ' + e.message);
+                statusLabel.textContent = 'Error';
+            } finally {
+                btn.disabled = false; btn.innerText = 'Enviar Script';
+            }
+        }
+
+        async function sendToLocalAgentSensado() {
+            if (window.generatedSensado.length === 0) return alert('No hay tramas RUS04 generadas.');
+
+            const btn = document.getElementById('btnSendAgentSensado');
+            const statusLabel = document.getElementById('agentStatusSensado');
+
+            statusLabel.textContent = 'Buscando...';
+
+            try {
+                await fetch('http://127.0.0.1:5000/status');
+            } catch (e) {
+                alert('❌ Agente local no encontrado. Ejecuta el .exe primero.');
+                statusLabel.textContent = 'Offline';
+                return;
+            }
+
+            btn.disabled = true; btn.innerHTML = 'Enviando...';
+            statusLabel.textContent = 'Enviando...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/enviar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lines: window.generatedSensado })
                 });
                 const res = await response.json();
 
@@ -973,6 +1170,9 @@
             });
         }
 
+        // ==========================================
+        // PROCESAMIENTO PRINCIPAL (Puntos de Ruta)
+        // ==========================================
         async function verificarDatos() {
             showLoading(true, "Verificando líneas...");
             window.generatedData = [];
@@ -1048,20 +1248,12 @@
                     const row = item.row;
                     const realIdx = item.realIdx;
 
-                    // Solo se actualizan Unidad (14) y Fecha y hora (15).
-                    // Las columnas 12 (Latitud) y 13 (Longitud) se dejan intactas
-                    // tal como las cargó el usuario.
                     window.ptosHot.setDataAtCell(realIdx, COL_UNIDAD, item.unidad);
                     window.ptosHot.setDataAtCell(realIdx, COL_FECHA_HORA, item.fecha.format(FORMATO_SALIDA));
 
                     const lat = parseFloat(row[12]), long = parseFloat(row[13]);
                     const procLat = encodeCoord(lat, 7);
                     const procLong = encodeCoord(long, 8);
-
-                    // NOTA: las siguientes dos líneas se eliminaron porque sobreescribían
-                    // la tabla con las coordenadas codificadas.
-                    // window.ptosHot.setDataAtCell(realIdx, 12, procLat);
-                    // window.ptosHot.setDataAtCell(realIdx, 13, procLong);
 
                     const horaBase = item.fecha.clone().add(3, 'hours');
                     const horaRus04 = horaBase.clone().add(DESFASE_RUS04_SEGUNDOS, 'seconds');
@@ -1126,13 +1318,110 @@
             }
         }
 
-        const processData = verificarDatos;
+        // ==========================================
+        // PROCESAMIENTO SENSADO (solo RUS04)
+        // ==========================================
+        async function generarRus04() {
+            if (!window.sensadoHot) return alert('Tabla de Sensado no inicializada.');
+
+            window.generatedSensado = [];
+
+            const allData = window.sensadoHot.getData();
+            const data = allData.slice(1).filter(r => r[0] && r[0].toString().trim() !== '');
+
+            if (data.length === 0) return alert('La tabla de Sensado está vacía.');
+
+            const baseData = window.baseHot ? window.baseHot.getData() : [];
+
+            let logText = '';
+            let total = 0;
+            const omitidas = [];
+
+            for (const row of data) {
+                const realIdx = allData.indexOf(row);
+                const numeroFila = realIdx + 1;
+
+                if (!row[12] || !row[13]) {
+                    omitidas.push(`Fila ${numeroFila}: sin latitud/longitud`);
+                    continue;
+                }
+
+                const unidad = row[14] !== null && row[14] !== undefined ? String(row[14]).trim() : '';
+                const fecha = parseFechaHora(row[15]);
+
+                if (!unidad) {
+                    omitidas.push(`Fila ${numeroFila}: sin unidad`);
+                    continue;
+                }
+                if (!fecha) {
+                    omitidas.push(`Fila ${numeroFila}: sin fecha válida`);
+                    continue;
+                }
+
+                const lat = parseFloat(row[12]);
+                const long = parseFloat(row[13]);
+                if (isNaN(lat) || isNaN(long)) {
+                    omitidas.push(`Fila ${numeroFila}: lat/long inválidas`);
+                    continue;
+                }
+
+                const uRow = baseData.find(x => x[0] == unidad);
+                const imei = uRow ? uRow[1] : '#N/A';
+                const id = uRow ? uRow[2] : '#N/A';
+
+                const horaBase = fecha.clone().add(3, 'hours');
+                const horaRus04 = horaBase.clone().add(DESFASE_RUS04_SEGUNDOS, 'seconds');
+                const ts04 = horaRus04.format('DDMMYYHHmmss');
+
+                const rus04 = construirRus04(ts04, lat, long, imei, CODIGO_ENTRADA_DEFAULT, ESTADO_ENTRADA_DEFAULT, id);
+
+                window.generatedSensado.push(rus04);
+                total++;
+                logText += `Fila ${numeroFila} | Unidad ${unidad} | ${fecha.format(FORMATO_SALIDA)}\n  ${rus04}\n`;
+            }
+
+            const resumen = `✅ ${total} RUS04 generados — ${window.generatedSensado.length} tramas listas para enviar`;
+            logText = `${resumen}\n\n${logText}`;
+
+            if (omitidas.length > 0) {
+                logText += `\n--- ${omitidas.length} fila(s) sin procesar ---\n` + omitidas.join('\n') + '\n';
+            }
+
+            logConsoleSensado(logText.trim() || 'Ningún dato generado.');
+
+            if (window.generatedSensado.length > 0) {
+                document.getElementById('btnSendAgentSensado').disabled = false;
+                if (isArduinoConnected) document.getElementById('btnSendArduinoSensado').disabled = false;
+            }
+
+            alert(`${total} RUS04 generados.` +
+                (omitidas.length > 0 ? `\n⚠️ ${omitidas.length} fila(s) sin procesar (ver consola).` : ''));
+        }
+
+        function limpiarSensado() {
+            if (!window.sensadoHot) return;
+            if (!confirm('¿Borrar todo el contenido de la tabla de Sensado?')) return;
+            window.sensadoHot.loadData([['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']]);
+            window.generatedSensado = [];
+            document.getElementById('btnSendAgentSensado').disabled = true;
+            document.getElementById('btnSendArduinoSensado').disabled = true;
+            logConsoleSensado('Tabla limpiada.');
+        }
 
         function logConsole(text) {
             const out = document.getElementById('output');
             out.innerText = text;
             out.scrollTop = out.scrollHeight;
         }
+
+        function logConsoleSensado(text) {
+            const out = document.getElementById('outputSensado');
+            if (!out) return;
+            out.innerText = text;
+            out.scrollTop = out.scrollHeight;
+        }
+
+        const processData = verificarDatos;
 
         document.addEventListener('DOMContentLoaded', () => {
         });
