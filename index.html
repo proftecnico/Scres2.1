@@ -11,92 +11,111 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@12.0.0/dist/handsontable.full.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
         :root {
-            --primary: 220, 90%, 56%;
-            --secondary: 217, 33%, 17%;
-            --accent: 25, 95%, 53%;
-            --success: 150, 80%, 40%;
-            --danger: 340, 80%, 60%;
-            --bg-1: #0f172a;
-            --bg-2: #1e293b;
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --bg-dark: #090d16;
+            --bg-panel: #0f172a;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --accent: #f97316;
+            --emerald: #10b981;
+            --emerald-dark: #059669;
+            --surface: #ffffff;
+            --surface-alt: #f8fafc;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
         }
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: radial-gradient(circle at 10% 20%, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 90%);
+            background: radial-gradient(circle at 15% 15%, #1e293b 0%, #090d16 65%);
+            background-attachment: fixed;
             min-height: 100vh;
             color: #ecf0f1;
-            padding: 20px;
+            padding: 16px;
+            margin: 0;
         }
 
+        /* Contenedor Principal */
         .main-container {
-            max-width: 1440px;
+            max-width: 1560px;
             margin: 0 auto;
             border-radius: 24px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
+            background: var(--surface-alt);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.65);
             overflow: hidden;
-            color: #334155;
-            min-height: 85vh;
+            color: var(--text-main);
+            min-height: calc(100vh - 32px);
             display: flex;
             flex-direction: column;
-            animation: fadeIn 0.8s ease;
+            animation: fadeIn 0.6s ease-out;
         }
 
+        /* Pantalla de Login */
         #login-screen {
-            flex: 1;
+            min-height: calc(100vh - 32px);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
             position: relative;
             overflow: hidden;
+            border-radius: 24px;
+            background: radial-gradient(circle at 50% 30%, #1e293b 0%, #090d16 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(110px);
+            pointer-events: none;
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 3rem;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 3rem 2.75rem;
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 430px;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
             text-align: center;
             z-index: 10;
         }
 
         .brand-logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.75rem;
-            line-height: 1.1;
-            background: linear-gradient(110deg, #60a5fa, #a78bfa 45%, #f97316);
+            font-size: 3rem;
+            line-height: 1;
+            background: linear-gradient(115deg, #60a5fa 0%, #a78bfa 50%, #f97316 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.4rem;
             font-weight: 700;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.03em;
         }
 
         .brand-version {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 700;
-            letter-spacing: 0.12em;
-            padding: 3px 10px;
+            letter-spacing: 0.14em;
+            padding: 4px 12px;
             border-radius: 50px;
             color: #fbbf24;
             background: rgba(251, 191, 36, 0.12);
@@ -109,104 +128,164 @@
         }
 
         .login-input {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             color: white;
             border-radius: 12px;
             padding: 12px 16px;
+            transition: all 0.2s;
         }
 
         .login-input:focus {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.09);
             border-color: #60a5fa;
             color: white;
-            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
         }
 
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Cabecera de la App */
         .app-header {
-            background: linear-gradient(110deg, #1e293b 0%, #0f172a 55%, #172554 100%);
+            background: linear-gradient(105deg, #0f172a 0%, #1e293b 60%, #172554 100%);
             color: white;
-            padding: 1.5rem 2rem;
+            padding: 1.1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 6px 16px;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 6px 14px;
             border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 4px 11px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
         }
 
-        .nav-tabs {
-            padding: 0 2rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            background: #f8fafc;
-            padding-top: 1rem;
-        }
-
-        .nav-link {
-            border: none !important;
-            padding: 10px 24px;
-            font-weight: 500;
-            color: #64748b;
-            border-radius: 8px 8px 0 0 !important;
-            transition: all 0.2s;
-        }
-
-        .nav-link:hover {
-            color: #3b82f6;
+        /* Navegación por Pestañas */
+        .nav-tabs-custom {
+            padding: 0.75rem 2rem 0;
+            border-bottom: 1px solid var(--border-color);
             background: #f1f5f9;
+            gap: 6px;
         }
 
-        .nav-link.active {
-            color: #3b82f6 !important;
-            background: white !important;
+        .nav-tabs-custom .nav-link {
+            border: 1px solid transparent !important;
+            padding: 10px 20px;
             font-weight: 600;
-            box-shadow: 0 -4px 0 0 #3b82f6 inset;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            border-radius: 12px 12px 0 0 !important;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
+        .nav-tabs-custom .nav-link:hover {
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            color: var(--primary) !important;
+            background: var(--surface-alt) !important;
+            border-color: var(--border-color) var(--border-color) var(--surface-alt) !important;
+            box-shadow: 0 -3px 0 0 var(--primary) inset;
+        }
+
+        /* Cuerpo y Tarjetas */
         .app-content {
-            padding: 2rem;
-            background: white;
+            padding: 1.5rem 2rem;
+            background: var(--surface-alt);
             flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.85rem 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+        }
+
+        .kpi-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .kpi-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text-main);
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .action-card {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 1.5rem;
-            height: 100%;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-        }
-
-        .action-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 34px -18px rgba(15, 23, 42, 0.35);
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
         }
 
         .section-title {
             font-size: 0.72rem;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             font-weight: 700;
-            color: #94a3b8;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
+        /* Botones Modernos */
         .btn-modern {
             border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 10px 18px;
+            border-radius: 11px;
             font-weight: 600;
+            font-size: 0.9rem;
             transition: all 0.2s;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
@@ -215,71 +294,141 @@
         .btn-primary-modern {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
-        .btn-primary-modern:hover {
+        .btn-primary-modern:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.38);
             color: white;
         }
 
         .btn-success-modern {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
 
-        .btn-success-modern:hover {
+        .btn-success-modern:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.38);
             color: white;
         }
 
         .btn-dark-modern {
-            background: linear-gradient(135deg, #334155, #1e293b);
+            background: linear-gradient(135deg, #334155, #0f172a);
             color: white;
-            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.3);
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+        }
+
+        .btn-dark-modern:hover:not(:disabled) {
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        /* Consola Terminal */
+        .terminal-wrapper {
+            background: #090d16;
+            border-radius: 16px;
+            border: 1px solid #1e293b;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .terminal-header {
+            background: #1e293b;
+            padding: 7px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
         }
 
         .console-output {
-            background: #0f172a;
             color: #4ade80;
-            font-family: 'Consolas', 'Monaco', monospace;
-            padding: 1.5rem;
-            border-radius: 18px;
-            height: 200px;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            padding: 1rem;
+            height: 190px;
             overflow-y: auto;
-            border: 1px solid #334155;
-            font-size: 0.88rem;
-            line-height: 1.45;
+            font-size: 0.78rem;
+            line-height: 1.5;
             white-space: pre-wrap;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+            flex-grow: 1;
         }
 
-        .console-output::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .console-output::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 8px;
-        }
-
+        /* Indicadores de estado */
         .badge-status {
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
             display: inline-block;
         }
 
         .status-connected {
             background: #4ade80;
-            box-shadow: 0 0 10px #4ade80;
+            box-shadow: 0 0 8px #4ade80;
         }
 
         .status-disconnected {
             background: #f87171;
+        }
+
+        /* Personalización Estética de Handsontable */
+        .table-container-card {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+            flex-grow: 1;
+        }
+
+        #ptos-table,
+        #base-table,
+        #sensado-table {
+            height: 520px !important;
+            width: 100%;
+            min-height: 520px;
+            display: block;
+            background: white;
+            z-index: 1;
+        }
+
+        .handsontable th {
+            background-color: #f1f5f9 !important;
+            color: #334155 !important;
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 600 !important;
+            font-size: 0.8rem !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .handsontable td {
+            font-family: 'Outfit', sans-serif !important;
+            font-size: 0.84rem !important;
+            color: #1e293b !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        .handsontable tr:first-child td {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            font-weight: 600 !important;
+            font-size: 0.8rem !important;
         }
 
         .loading-overlay {
@@ -288,36 +437,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
             z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
         }
 
-        #ptos-table,
-        #base-table,
-        #sensado-table {
-            height: 500px !important;
-            width: 100%;
-            min-height: 500px;
-            display: block;
-            background: white;
-            z-index: 1;
-        }
-
-        /* Fix: el modal está fuera de .main-container, así que
-           hereda el color claro de body (#ecf0f1) sobre el fondo
-           blanco del modal. Se fuerza color oscuro explícito. */
         .modal-content {
             color: #334155;
         }
 
-        .modal-content .form-check-label {
-            color: #334155;
-        }
-
+        .modal-content .form-check-label,
         .modal-content .form-label,
         .modal-content .small,
         .modal-content small {
@@ -328,125 +461,222 @@
 
 <body>
 
+    <!-- Contenedor de Notificaciones Toast -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 10000;" id="toastContainer"></div>
+
+    <!-- Overlay de Carga -->
     <div id="loading" class="loading-overlay" style="display: none;">
         <div class="text-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
-            <h5 class="mt-3 fw-bold text-dark" id="loadingText">Cargando...</h5>
+            <div class="spinner-border text-info" style="width: 3rem; height: 3rem;" role="status"></div>
+            <h5 class="mt-3 fw-bold text-white" id="loadingText">Cargando...</h5>
         </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- PANTALLA DE LOGIN                                            -->
+    <!-- ============================================================ -->
     <div id="login-screen">
-        <div
-            style="position: absolute; width: 300px; height: 300px; background: #3b82f6; filter: blur(120px); opacity: 0.2; top: -50px; right: -50px; border-radius: 50%;">
-        </div>
-        <div
-            style="position: absolute; width: 400px; height: 400px; background: #f97316; filter: blur(140px); opacity: 0.15; bottom: -100px; left: -100px; border-radius: 50%;">
-        </div>
+        <div class="ambient-orb" style="width: 360px; height: 360px; background: #3b82f6; opacity: 0.22; top: -80px; right: -80px;"></div>
+        <div class="ambient-orb" style="width: 420px; height: 420px; background: #f97316; opacity: 0.16; bottom: -120px; left: -100px;"></div>
 
         <div class="login-card animate__animated animate__zoomIn">
             <div class="mb-4">
                 <div class="brand-logo">SCRES</div>
-                <div class="brand-version mb-2">PRO 2.0</div>
-                <div class="text-white-50 small letter-spacing-2">System Control &amp; Routing</div>
+                <div class="brand-version mb-2"><i class="bi bi-cpu"></i> PRO 2.0</div>
+                <div class="text-white-50 small letter-spacing-2 mt-1">System Control &amp; Routing</div>
             </div>
 
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="mb-3 text-start">
-                    <label class="form-label text-white-50 small ms-1">Email</label>
-                    <input type="email" class="form-control login-input" id="email" placeholder="usuario@ejemplo.com"
-                        required>
+                    <label class="form-label text-white-50 small ms-1">Correo Electrónico</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-secondary text-white-50"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control login-input" id="email" placeholder="usuario@ejemplo.com" required>
+                    </div>
                 </div>
                 <div class="mb-4 text-start">
                     <label class="form-label text-white-50 small ms-1">Contraseña</label>
-                    <input type="password" class="form-control login-input" id="password" placeholder="••••••••"
-                        required>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-secondary text-white-50"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control login-input" id="password" placeholder="••••••••" required>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary-modern w-100 py-3">INICIAR SESIÓN</button>
+                <button type="submit" class="btn btn-modern btn-primary-modern w-100 py-3">
+                    <i class="bi bi-box-arrow-in-right"></i> INICIAR SESIÓN
+                </button>
             </form>
 
-            <div class="mt-4 pt-3 border-top border-secondary">
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
                 <small class="text-white-50">By Jorge Garavagno © 2026</small>
             </div>
         </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- APLICACIÓN PRINCIPAL                                         -->
+    <!-- ============================================================ -->
     <div class="main-container" id="main-app" style="display: none;">
+        <!-- Header -->
         <div class="app-header">
-            <div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="fs-4 fw-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">SCRES</span>
-                    <span class="brand-version">PRO 2.0</span>
-                </div>
-                <small class="text-white-50">Procesador de Rutas Urbanas</small>
-            </div>
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm btn-outline-light rounded-pill" onclick="logout()">Cerrar Sesión</button>
-                <div class="user-profile">
-                    <div class="badge-status status-connected"></div>
-                    <span id="userEmailDisplay" class="small">usuario@scres.com</span>
+                <div class="p-2 rounded-3 bg-primary bg-opacity-25 border border-primary border-opacity-50 text-info fs-4 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-broadcast-pin"></i>
                 </div>
+                <div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fs-4 fw-bold text-white" style="font-family: 'Space Grotesk', sans-serif;">SCRES</span>
+                        <span class="brand-version">PRO 2.0</span>
+                    </div>
+                    <small class="text-white-50">Procesador de Telemetría y Rutas Urbanas</small>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="status-pill" title="Registro automático de uso en Google Drive">
+                    <span class="badge-status status-connected" id="driveLoggerDot"></span>
+                    <span id="driveLoggerStatusText">Drive Log Activo</span>
+                </div>
+
+                <div class="user-profile">
+                    <i class="bi bi-person-check-fill text-info"></i>
+                    <span id="userEmailDisplay" class="small fw-medium">usuario@scres.com</span>
+                    <span id="userRoleBadge" class="badge bg-secondary rounded-pill" style="font-size: 0.65rem;">OPERADOR</span>
+                </div>
+
+                <button class="btn btn-sm btn-outline-light rounded-pill px-3" onclick="logout()">
+                    <i class="bi bi-power"></i> Salir
+                </button>
             </div>
         </div>
 
-        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+        <!-- Pestañas -->
+        <ul class="nav nav-tabs nav-tabs-custom" id="mainTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="tab-ptos" href="#ptos" data-bs-toggle="tab" role="tab">Puntos de Ruta</a>
+                <a class="nav-link active" id="tab-ptos" href="#ptos" data-bs-toggle="tab" role="tab">
+                    <i class="bi bi-geo-alt-fill"></i> Puntos de Ruta (RUS03 + RUS04)
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="tab-sensado" href="#sensado" data-bs-toggle="tab" role="tab">Sensado</a>
+                <a class="nav-link" id="tab-sensado" href="#sensado" data-bs-toggle="tab" role="tab">
+                    <i class="bi bi-lightning-charge-fill"></i> Sensado (Solo RUS04)
+                </a>
             </li>
             <li class="nav-item" id="admin-tab" style="display: none;" role="presentation">
-                <a class="nav-link" id="tab-base" href="#base" data-bs-toggle="tab" role="tab">Base de Datos (Firestore)</a>
+                <a class="nav-link" id="tab-base" href="#base" data-bs-toggle="tab" role="tab">
+                    <i class="bi bi-database-fill-gear"></i> Base de Unidades
+                </a>
+            </li>
+            <li class="nav-item" id="logs-tab-item" style="display: none;" role="presentation">
+                <a class="nav-link" id="tab-logs" href="#logs" data-bs-toggle="tab" role="tab" onclick="loadLogsFromFirestore()">
+                    <i class="bi bi-shield-check"></i> Auditoría / Logs Drive
+                </a>
             </li>
         </ul>
 
+        <!-- Contenido de Pestañas -->
         <div class="app-content">
-            <div class="tab-content h-100">
+            <div class="tab-content flex-grow-1">
 
                 <!-- ============================================================ -->
                 <!-- TAB 1: Puntos de Ruta (RUS03 + RUS04)                         -->
                 <!-- ============================================================ -->
                 <div class="tab-pane fade show active h-100" id="ptos" role="tabpanel">
-                    <div class="row h-100 g-4">
+                    <!-- Barra de KPIs -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-3">
+                            <div class="kpi-card">
+                                <div class="kpi-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-list-check"></i></div>
+                                <div>
+                                    <div class="kpi-value" id="kpiPtosFilas">0</div>
+                                    <div class="kpi-label">Filas Procesadas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi-card">
+                                <div class="kpi-icon bg-success bg-opacity-10 text-success"><i class="bi bi-upc-scan"></i></div>
+                                <div>
+                                    <div class="kpi-value" id="kpiPtosRus03">0</div>
+                                    <div class="kpi-label">Tramas RUS03 (RFID)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi-card">
+                                <div class="kpi-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-activity"></i></div>
+                                <div>
+                                    <div class="kpi-value" id="kpiPtosRus04">0</div>
+                                    <div class="kpi-label">Tramas RUS04 (Sensado)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="kpi-card">
+                                <div class="kpi-icon bg-info bg-opacity-10 text-info"><i class="bi bi-send-check"></i></div>
+                                <div>
+                                    <div class="kpi-value" id="kpiPtosTotal">0</div>
+                                    <div class="kpi-label">Total Tramas Listas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
                         <div class="col-lg-9 d-flex flex-column">
-                            <div class="bg-light border rounded-3 overflow-hidden flex-grow-1 shadow-sm">
-                                <div id="ptos-table" style="height: 100%; width: 100%;"></div>
+                            <div class="table-container-card">
+                                <div id="ptos-table"></div>
                             </div>
                         </div>
 
                         <div class="col-lg-3 d-flex flex-column gap-3">
                             <div class="action-card">
-                                <h6 class="section-title mb-3">Acciones</h6>
-                                <button class="btn btn-success-modern w-100 mb-2" onclick="verificarDatos()">
-                                    <span>🔎 Verificar</span>
+                                <h6 class="section-title mb-2"><i class="bi bi-1-circle-fill text-primary"></i> Procesamiento</h6>
+                                <button class="btn btn-modern btn-success-modern w-100 mb-2" onclick="verificarDatos()">
+                                    <i class="bi bi-check2-circle"></i> Verificar y Generar
                                 </button>
-                                <p class="small text-muted mb-3">Verificador de líneas</p>
+                                <div class="small text-muted mb-3">Valida coordenadas, unidad y genera tramas RUS03 + RUS04.</div>
 
                                 <hr class="my-3">
 
-                                <div class="mb-3">
+                                <h6 class="section-title mb-2"><i class="bi bi-2-circle-fill text-primary"></i> Despacho de Tramas</h6>
+
+                                <div class="p-2 rounded-3 bg-light border mb-2">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <small class="fw-bold">Arduino / USB</small>
+                                        <small class="fw-bold"><i class="bi bi-usb-symbol"></i> Arduino / USB</small>
                                         <span class="badge-status status-disconnected" id="usbDot"></span>
                                     </div>
-                                    <button class="btn btn-outline-secondary btn-sm w-100 mb-2"
-                                        onclick="connectArduino()">Conectar USB</button>
-                                    <button class="btn btn-primary-modern btn-sm w-100" id="btnSendArduino"
-                                        onclick="sendToArduino()" disabled>Enviar a Arduino</button>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-outline-secondary btn-sm w-50" onclick="connectArduino()">Conectar</button>
+                                        <button class="btn btn-modern btn-primary-modern btn-sm w-50" id="btnSendArduino" onclick="sendToArduino()" disabled>Enviar</button>
+                                    </div>
                                 </div>
 
-                                <div class="mb-0">
+                                <div class="p-2 rounded-3 bg-light border">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <small class="fw-bold">Agente Local</small>
-                                        <span id="agentStatus" class="small text-muted">Offline</span>
+                                        <small class="fw-bold"><i class="bi bi-hdd-network"></i> Agente Local</small>
+                                        <span id="agentStatus" class="badge bg-secondary">Offline</span>
                                     </div>
-                                    <button class="btn btn-dark-modern btn-sm w-100" id="btnSendAgent"
-                                        onclick="sendToLocalAgent()" disabled>Enviar Script</button>
+                                    <button class="btn btn-modern btn-dark-modern btn-sm w-100" id="btnSendAgent" onclick="sendToLocalAgent()" disabled>
+                                        <i class="bi bi-terminal"></i> Enviar Script al Agente
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="console-output flex-grow-1" id="output">
-                                <div class="text-muted opacity-50">Esperando procesamiento...</div>
+                            <!-- Terminal de salida -->
+                            <div class="terminal-wrapper">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <span style="background:#ef4444;"></span>
+                                        <span style="background:#f59e0b;"></span>
+                                        <span style="background:#10b981;"></span>
+                                    </div>
+                                    <span class="text-white-50" style="font-size: 0.7rem;">CONSOLA DE SALIDA</span>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-link text-white-50 p-0 me-2" title="Copiar tramas" onclick="copiarTramas('ptos')"><i class="bi bi-clipboard"></i></button>
+                                        <button class="btn btn-sm btn-link text-white-50 p-0" title="Descargar .txt" onclick="descargarTramas('ptos')"><i class="bi bi-download"></i></button>
+                                    </div>
+                                </div>
+                                <div class="console-output" id="output">Esperando procesamiento...</div>
                             </div>
                         </div>
                     </div>
@@ -456,50 +686,85 @@
                 <!-- TAB 2: Sensado (solo RUS04)                                   -->
                 <!-- ============================================================ -->
                 <div class="tab-pane fade h-100" id="sensado" role="tabpanel">
-                    <div class="row h-100 g-4">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="kpi-card">
+                                <div class="kpi-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-lightning-charge"></i></div>
+                                <div>
+                                    <div class="kpi-value" id="kpiSensadoTotal">0</div>
+                                    <div class="kpi-label">Tramas RUS04 Generadas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="kpi-card">
+                                <div class="kpi-icon bg-danger bg-opacity-10 text-danger"><i class="bi bi-exclamation-triangle"></i></div>
+                                <div>
+                                    <div class="kpi-value" id="kpiSensadoOmitidas">0</div>
+                                    <div class="kpi-label">Filas Omitidas / Incompletas</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
                         <div class="col-lg-9 d-flex flex-column">
-                            <div class="bg-light border rounded-3 overflow-hidden flex-grow-1 shadow-sm">
-                                <div id="sensado-table" style="height: 100%; width: 100%;"></div>
+                            <div class="table-container-card">
+                                <div id="sensado-table"></div>
                             </div>
                         </div>
 
                         <div class="col-lg-3 d-flex flex-column gap-3">
                             <div class="action-card">
-                                <h6 class="section-title mb-3">Sensado de Trabajo</h6>
+                                <h6 class="section-title mb-2"><i class="bi bi-lightning-fill text-warning"></i> Sensado de Trabajo</h6>
                                 <p class="small text-muted mb-3">
-                                    Pegá las filas con RFID y se generarán solo los Sensados para enviar.
+                                    Pegá las filas y se generarán únicamente los eventos RUS04 para enviar.
                                 </p>
-                                <button class="btn btn-success-modern w-100 mb-2" onclick="generarRus04()">
-                                    <span>⚡ Generar RUS04</span>
+                                <button class="btn btn-modern btn-success-modern w-100 mb-2" onclick="generarRus04()">
+                                    <i class="bi bi-gear-wide-connected"></i> Generar RUS04
                                 </button>
-                                <button class="btn btn-outline-secondary btn-sm w-100 mb-3"
-                                    onclick="limpiarSensado()">Limpiar tabla</button>
+                                <button class="btn btn-outline-secondary btn-sm w-100 mb-3" onclick="limpiarSensado()">
+                                    <i class="bi bi-trash3"></i> Limpiar tabla
+                                </button>
 
                                 <hr class="my-3">
 
-                                <div class="mb-3">
+                                <div class="p-2 rounded-3 bg-light border mb-2">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <small class="fw-bold">Arduino / USB</small>
+                                        <small class="fw-bold"><i class="bi bi-usb-symbol"></i> Arduino / USB</small>
                                         <span class="badge-status status-disconnected" id="usbDotSensado"></span>
                                     </div>
-                                    <button class="btn btn-outline-secondary btn-sm w-100 mb-2"
-                                        onclick="connectArduinoSensado()">Conectar USB</button>
-                                    <button class="btn btn-primary-modern btn-sm w-100" id="btnSendArduinoSensado"
-                                        onclick="sendToArduinoSensado()" disabled>Enviar a Arduino</button>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-outline-secondary btn-sm w-50" onclick="connectArduinoSensado()">Conectar</button>
+                                        <button class="btn btn-modern btn-primary-modern btn-sm w-50" id="btnSendArduinoSensado" onclick="sendToArduinoSensado()" disabled>Enviar</button>
+                                    </div>
                                 </div>
 
-                                <div class="mb-0">
+                                <div class="p-2 rounded-3 bg-light border">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <small class="fw-bold">Agente Local</small>
-                                        <span id="agentStatusSensado" class="small text-muted">Offline</span>
+                                        <small class="fw-bold"><i class="bi bi-hdd-network"></i> Agente Local</small>
+                                        <span id="agentStatusSensado" class="badge bg-secondary">Offline</span>
                                     </div>
-                                    <button class="btn btn-dark-modern btn-sm w-100" id="btnSendAgentSensado"
-                                        onclick="sendToLocalAgentSensado()" disabled>Enviar Script</button>
+                                    <button class="btn btn-modern btn-dark-modern btn-sm w-100" id="btnSendAgentSensado" onclick="sendToLocalAgentSensado()" disabled>
+                                        <i class="bi bi-terminal"></i> Enviar Script al Agente
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="console-output flex-grow-1" id="outputSensado">
-                                <div class="text-muted opacity-50">Esperando procesamiento...</div>
+                            <div class="terminal-wrapper">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <span style="background:#ef4444;"></span>
+                                        <span style="background:#f59e0b;"></span>
+                                        <span style="background:#10b981;"></span>
+                                    </div>
+                                    <span class="text-white-50" style="font-size: 0.7rem;">CONSOLA RUS04</span>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-link text-white-50 p-0 me-2" title="Copiar tramas" onclick="copiarTramas('sensado')"><i class="bi bi-clipboard"></i></button>
+                                        <button class="btn btn-sm btn-link text-white-50 p-0" title="Descargar .txt" onclick="descargarTramas('sensado')"><i class="bi bi-download"></i></button>
+                                    </div>
+                                </div>
+                                <div class="console-output" id="outputSensado">Esperando procesamiento...</div>
                             </div>
                         </div>
                     </div>
@@ -510,21 +775,77 @@
                 <!-- ============================================================ -->
                 <div class="tab-pane fade h-100" id="base" role="tabpanel">
                     <div class="d-flex flex-column h-100">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-3 rounded-4 border">
                             <div>
-                                <h4 class="mb-1">Base de Datos de Unidades</h4>
-                                <p class="text-muted small mb-0">Sincronizado con Firebase Firestore Cloud</p>
+                                <h5 class="mb-1 fw-bold"><i class="bi bi-truck text-primary"></i> Base de Datos de Unidades</h5>
+                                <p class="text-muted small mb-0">Sincronizado en tiempo real con Firebase Firestore Cloud</p>
                             </div>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-outline-danger btn-sm" onclick="migrateDataToFirebase()">⚠️
-                                    Migrar Local a Nube</button>
-                                <button class="btn btn-primary-modern" onclick="saveUnidadesToFirestore()">💾 Guardar
-                                    Cambios en Nube</button>
+                                <button class="btn btn-outline-danger btn-sm rounded-3" onclick="migrateDataToFirebase()">
+                                    <i class="bi bi-cloud-arrow-up"></i> Migrar Base Inicial
+                                </button>
+                                <button class="btn btn-modern btn-primary-modern" onclick="saveUnidadesToFirestore()">
+                                    <i class="bi bi-floppy"></i> Guardar Cambios en Nube
+                                </button>
                             </div>
                         </div>
-                        <div class="bg-light border rounded-3 overflow-hidden flex-grow-1 shadow-sm">
-                            <div id="base-table" style="height: 100%; width: 100%;"></div>
+                        <div class="table-container-card">
+                            <div id="base-table"></div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- TAB 4: Auditoría / Logs Drive (Solo Admin)                    -->
+                <!-- ============================================================ -->
+                <div class="tab-pane fade h-100" id="logs" role="tabpanel">
+                    <div class="row g-3 mb-3">
+                        <div class="col-lg-8">
+                            <div class="bg-white p-3 rounded-4 border h-100 d-flex flex-column justify-content-center">
+                                <h6 class="fw-bold mb-1"><i class="bi bi-google text-success"></i> Conexión con tu Google Drive Personal (Webhook Activo)</h6>
+                                <p class="small text-muted mb-2">
+                                    Cada vez que cualquier usuario genera o envía tramas, se envía una copia automática a tu Google Apps Script y a Firestore.
+                                </p>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-light fw-semibold">URL Webhook Drive</span>
+                                    <input type="text" id="webhookUrlInput" class="form-control" value="https://script.google.com/macros/s/AKfycby-o8DaR17aAjd0ioZckoHZP3UaP-uV1ZJBrCR0GlYIDMIWFuU1lkyRGaed_K3squJ2ZA/exec">
+                                    <button class="btn btn-primary" onclick="guardarWebhookUrl()"><i class="bi bi-check2"></i> Guardar URL</button>
+                                    <button class="btn btn-outline-success" onclick="probarLogDrive()"><i class="bi bi-send"></i> Probar Envío a Drive</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="bg-white p-3 rounded-4 border h-100 d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="fw-bold mb-1">Historial de Uso</h6>
+                                    <p class="small text-muted mb-0">Registros almacenados en la nube</p>
+                                </div>
+                                <button class="btn btn-modern btn-dark-modern btn-sm" onclick="loadLogsFromFirestore()">
+                                    <i class="bi bi-arrow-clockwise"></i> Actualizar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-4 border p-3 shadow-sm" style="max-height: 470px; overflow-y: auto;">
+                        <table class="table table-hover align-middle small mb-0">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th>Fecha y Hora</th>
+                                    <th>Usuario</th>
+                                    <th>Módulo</th>
+                                    <th>Acción</th>
+                                    <th>Unidades</th>
+                                    <th>Cant. Tramas</th>
+                                    <th>Detalle de Datos Enviados</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">Cargando registros de auditoría...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -532,11 +853,12 @@
         </div>
     </div>
 
+    <!-- Modal para completar datos faltantes -->
     <div class="modal fade" id="routeModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
                 <div class="modal-header border-0 bg-light rounded-top-4">
-                    <h5 class="modal-title fw-bold">⚙️ Completar datos faltantes</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-sliders text-primary"></i> Completar datos faltantes</h5>
                 </div>
                 <div class="modal-body p-4">
                     <form id="routeForm">
@@ -547,13 +869,11 @@
 
                         <div class="mb-3 d-none" id="unidadBlock">
                             <label class="form-label small fw-bold text-muted">UNIDAD ASIGNADA</label>
-                            <input type="text" class="form-control form-control-lg bg-light" id="unidad"
-                                placeholder="Ej: 1024">
+                            <input type="text" class="form-control form-control-lg bg-light" id="unidad" placeholder="Ej: 1024">
                         </div>
 
                         <div class="alert alert-success py-2 small d-none" id="fechasDetectadas">
-                            📅 Fecha y hora tomada de la tabla: <span id="fechasDetectadasText"
-                                class="fw-bold"></span>
+                            📅 Fecha y hora tomada de la tabla: <span id="fechasDetectadasText" class="fw-bold"></span>
                         </div>
 
                         <div class="d-none" id="fechasBlock">
@@ -570,9 +890,8 @@
                     </form>
                 </div>
                 <div class="modal-footer border-0 pt-0 d-block">
-                    <button type="button" class="btn btn-primary-modern w-100" id="submitRoute">CONFIRMAR</button>
-                    <button type="button" class="btn btn-link w-100 text-muted small mt-1" id="skipRoute">Omitir esta
-                        fila</button>
+                    <button type="button" class="btn btn-modern btn-primary-modern w-100" id="submitRoute">CONFIRMAR</button>
+                    <button type="button" class="btn btn-link w-100 text-muted small mt-1" id="skipRoute">Omitir esta fila</button>
                 </div>
             </div>
         </div>
@@ -582,10 +901,18 @@
     <script src="https://cdn.jsdelivr.net/npm/handsontable@12.0.0/dist/handsontable.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 
+    <!-- ============================================================ -->
+    <!-- MÓDULO FIREBASE + AUDITORÍA GOOGLE DRIVE                      -->
+    <!-- ============================================================ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, addDoc, writeBatch, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // =========================================================================
+        // 🔗 URL DE TU GOOGLE APPS SCRIPT INTEGRADA POR DEFECTO PARA TODOS LOS USUARIOS
+        // =========================================================================
+        const DEFAULT_GOOGLE_DRIVE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycby-o8DaR17aAjd0ioZckoHZP3UaP-uV1ZJBrCR0GlYIDMIWFuU1lkyRGaed_K3squJ2ZA/exec";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVxsfxvhE3ZtkoG_CLWyhZai2QLtei2Es",
@@ -599,24 +926,163 @@
         };
 
         let app, auth, db;
-        let userData = null;
+        window.currentUserEmail = "Anónimo";
 
         window.ptosHot = null;
         window.baseHot = null;
         window.sensadoHot = null;
         window.generatedData = [];
         window.generatedSensado = [];
+        window.lastUnidadesPtos = [];
+        window.lastUnidadesSensado = [];
         window.role = '';
 
         try {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-            console.log("Firebase initialized");
         } catch (e) {
             console.error("Firebase init error", e);
             alert("⚠️ Error iniciando Firebase: " + e.message);
         }
+
+        // Obtener URL activa del Webhook (usa siempre tu URL de Apps Script por defecto)
+        window.getActiveWebhookUrl = () => {
+            return localStorage.getItem('scres_drive_webhook') || DEFAULT_GOOGLE_DRIVE_WEBHOOK_URL;
+        };
+
+        window.guardarWebhookUrl = async () => {
+            const url = document.getElementById('webhookUrlInput').value.trim();
+            localStorage.setItem('scres_drive_webhook', url);
+            if (db) {
+                try {
+                    await setDoc(doc(db, "configuracion", "drive_logger"), { webhookUrl: url });
+                } catch (e) {
+                    console.warn("No se pudo guardar config en Firestore:", e);
+                }
+            }
+            window.notify("URL de Google Drive guardada correctamente.", "success");
+        };
+
+        async function loadWebhookConfigFromFirestore() {
+            if (!db) return;
+            try {
+                const snap = await getDocs(collection(db, "configuracion"));
+                snap.forEach(d => {
+                    if (d.id === "drive_logger" && d.data().webhookUrl) {
+                        localStorage.setItem('scres_drive_webhook', d.data().webhookUrl);
+                    }
+                });
+            } catch (e) {
+                console.warn("Configuración global no leída:", e);
+            }
+        }
+
+        // =========================================================================
+        // 📝 FUNCIÓN CENTRAL DE AUDITORÍA (ENVÍA A TU GOOGLE DRIVE Y FIRESTORE)
+        // =========================================================================
+        window.registrarLogDeUso = async ({ modulo, accion, tramas = [], unidades = [] }) => {
+            const fechaHora = moment().format('DD/MM/YYYY HH:mm:ss');
+            const timestampISO = new Date().toISOString();
+            const usuario = window.currentUserEmail || 'usuario_desconocido';
+
+            const payload = {
+                fechaHora: fechaHora,
+                timestamp: timestampISO,
+                usuario: usuario,
+                modulo: modulo,
+                accion: accion,
+                cantidad: tramas.length,
+                unidades: unidades,
+                tramas: tramas
+            };
+
+            // 1. Guardar respaldo en Firebase Firestore (Colección: logs_uso)
+            if (db) {
+                try {
+                    await addDoc(collection(db, "logs_uso"), payload);
+                } catch (err) {
+                    console.warn("Error guardando log en Firestore:", err);
+                }
+            }
+
+            // 2. Enviar al Google Drive personal vía Google Apps Script
+            const webhookUrl = window.getActiveWebhookUrl();
+            if (webhookUrl) {
+                try {
+                    await fetch(webhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                    console.log("✅ Log enviado a Google Drive correctamente.");
+                } catch (err) {
+                    console.error("❌ Error enviando log a Google Drive:", err);
+                }
+            }
+        };
+
+        window.probarLogDrive = async () => {
+            const url = window.getActiveWebhookUrl();
+            if (!url) {
+                window.notify("Pegá primero la URL de tu Google Apps Script y tocá Guardar.", "warning");
+                return;
+            }
+            window.notify("Enviando registro de prueba a tu Google Drive...", "info");
+            await window.registrarLogDeUso({
+                modulo: "Auditoría",
+                accion: "Prueba de Conexión Drive",
+                unidades: ["TEST-1016"],
+                tramas: [">RUS04,TEST_LOG_DRIVE_OK<"]
+            });
+            window.notify("Prueba enviada. Revisá tu Hoja de Cálculo en Google Drive.", "success");
+            window.loadLogsFromFirestore();
+        };
+
+        window.loadLogsFromFirestore = async () => {
+            if (!db || window.role !== 'admin') return;
+            const tbody = document.getElementById('logsTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary"></div> Cargando historial...</td></tr>';
+
+            try {
+                const q = query(collection(db, "logs_uso"), orderBy("timestamp", "desc"), limit(50));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">Aún no hay registros de actividad.</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                snap.forEach(d => {
+                    const item = d.data();
+                    const tramasPreview = Array.isArray(item.tramas) ? item.tramas.join('\n') : '';
+                    const unidadesStr = Array.isArray(item.unidades) && item.unidades.length > 0 ? item.unidades.join(', ') : '-';
+                    html += `
+                        <tr>
+                            <td class="fw-semibold text-nowrap">${item.fechaHora || '-'}</td>
+                            <td><span class="badge bg-light text-dark border">${item.usuario || '-'}</span></td>
+                            <td>${item.modulo || '-'}</td>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary">${item.accion || '-'}</span></td>
+                            <td>${unidadesStr}</td>
+                            <td class="fw-bold">${item.cantidad || 0}</td>
+                            <td>
+                                <details>
+                                    <summary class="text-primary" style="cursor:pointer;">Ver tramas (${item.cantidad || 0})</summary>
+                                    <pre class="bg-dark text-success p-2 rounded mt-1 mb-0" style="font-size:0.72rem; max-height:120px; overflow:auto;">${tramasPreview}</pre>
+                                </details>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-danger text-center py-3">Error cargando logs: ${e.message}</td></tr>`;
+            }
+        };
 
         window.handleLogin = async (e) => {
             e.preventDefault();
@@ -626,16 +1092,13 @@
             showLoading(true, "Autenticando...");
 
             try {
-                if (firebaseConfig.apiKey === "API_KEY_AQUI") {
-                    throw new Error("Configuración de Firebase incompleta. Edita el código.");
-                }
                 await signInWithEmailAndPassword(auth, email, pass);
             } catch (error) {
                 showLoading(false);
-                alert("Error de Login: " + error.message);
+                window.notify("Error de Login: " + error.message, "danger");
 
                 if (email === 'admin@test.com' && pass === '123456') {
-                    alert("⚠️ MODO DEBUG OFFLINE ACTIVADO");
+                    window.currentUserEmail = email;
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('main-app').style.display = 'flex';
                     initTables();
@@ -647,9 +1110,9 @@
             signOut(auth).then(() => window.location.reload());
         };
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                userData = user;
+                window.currentUserEmail = user.email;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'flex';
                 document.getElementById('userEmailDisplay').textContent = user.email;
@@ -658,9 +1121,17 @@
                 if (admins.includes(user.email) || user.uid === 'RbKjvuTv34OTW81kbTtX11bTe133') {
                     window.role = 'admin';
                     document.getElementById('admin-tab').style.display = 'block';
+                    document.getElementById('logs-tab-item').style.display = 'block';
+                    const roleBadge = document.getElementById('userRoleBadge');
+                    roleBadge.textContent = 'ADMIN';
+                    roleBadge.className = 'badge bg-warning text-dark rounded-pill';
                 }
 
                 initTables();
+                await loadWebhookConfigFromFirestore();
+                const inputWebhook = document.getElementById('webhookUrlInput');
+                if (inputWebhook) inputWebhook.value = window.getActiveWebhookUrl();
+
                 loadUnidadesFromFirestore();
                 showLoading(false);
             } else {
@@ -689,7 +1160,7 @@
         };
 
         window.saveUnidadesToFirestore = async () => {
-            if (window.role !== 'admin') { alert("Solo admins"); return; }
+            if (window.role !== 'admin') { window.notify("Solo administradores", "warning"); return; }
             if (!db) return;
 
             showLoading(true, "Guardando en nube...");
@@ -706,10 +1177,10 @@
                 });
 
                 await batch.commit();
-                alert("✅ Datos guardados correctamente en Firebase!");
+                window.notify("Datos guardados correctamente en Firebase", "success");
             } catch (e) {
                 console.error(e);
-                alert("❌ Error guardando: " + e.message);
+                window.notify("Error guardando: " + e.message, "danger");
             } finally {
                 showLoading(false);
             }
@@ -739,17 +1210,43 @@
                     batch.set(docRef, { row: row });
                 });
                 await batch.commit();
-                alert("✅ Migración completada.");
+                window.notify("Migración completada.", "success");
             } catch (e) {
-                alert("Error: " + e.message);
+                window.notify("Error: " + e.message, "danger");
             } finally {
                 showLoading(false);
             }
-        }
-
+        };
     </script>
 
+    <!-- ============================================================ -->
+    <!-- LÓGICA DE PROCESAMIENTO Y COMUNICACIÓN                       -->
+    <!-- ============================================================ -->
     <script>
+        function notify(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return alert(message);
+
+            const colors = {
+                success: 'bg-success text-white',
+                danger: 'bg-danger text-white',
+                warning: 'bg-warning text-dark',
+                info: 'bg-primary text-white'
+            };
+
+            const toastEl = document.createElement('div');
+            toastEl.className = `toast align-items-center border-0 ${colors[type] || colors.info} show mb-2 rounded-3 shadow`;
+            toastEl.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body fw-medium">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            container.appendChild(toastEl);
+            setTimeout(() => toastEl.remove(), 4500);
+        }
+        window.notify = notify;
+
         function showLoading(show, text = "Cargando...") {
             const el = document.getElementById('loading');
             document.getElementById('loadingText').innerText = text;
@@ -767,8 +1264,10 @@
             container2.innerHTML = '';
             if (container3) container3.innerHTML = '';
 
+            const defaultHeaders = [['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']];
+
             window.ptosHot = new Handsontable(container1, {
-                data: [['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']],
+                data: JSON.parse(JSON.stringify(defaultHeaders)),
                 rowHeaders: true,
                 colHeaders: true,
                 height: '100%',
@@ -798,7 +1297,7 @@
 
             if (container3) {
                 window.sensadoHot = new Handsontable(container3, {
-                    data: [['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']],
+                    data: JSON.parse(JSON.stringify(defaultHeaders)),
                     rowHeaders: true,
                     colHeaders: true,
                     height: '100%',
@@ -814,11 +1313,6 @@
             }
         }
 
-        // ==========================================
-        // FIX: Handsontable inicializa con 0×0 cuando su contenedor
-        // está dentro de un tab oculto. Al mostrarse el tab hay que
-        // refrescar dimensiones y redibujar.
-        // ==========================================
         function refreshHotForTab(target) {
             setTimeout(() => {
                 try {
@@ -852,19 +1346,19 @@
                     port = await navigator.serial.requestPort();
                     await port.open({ baudRate: 9600 });
                     const textEncoder = new TextEncoderStream();
-                    const writableStreamClosed = textEncoder.readable.pipeTo(port.writable);
+                    textEncoder.readable.pipeTo(port.writable);
                     writer = textEncoder.writable.getWriter();
 
                     isArduinoConnected = true;
                     updateArduinoUI(true);
                     updateArduinoSensadoUI(true);
-                    alert("🔌 Arduino Conectado!");
+                    notify("🔌 Arduino conectado por USB correctamente", "success");
                 } catch (err) {
                     console.error('Error:', err);
-                    alert('❌ Error conectando Arduino: ' + err.message);
+                    notify('❌ Error conectando Arduino: ' + err.message, "danger");
                 }
             } else {
-                alert('⚠️ Navegador no compatible con USB Serial. Use Chrome.');
+                notify('⚠️ Navegador no compatible con Web Serial. Usá Chrome o Edge.', "warning");
             }
         }
 
@@ -896,8 +1390,8 @@
         }
 
         async function sendToArduino() {
-            if (!isArduinoConnected || !writer) return alert('Conecta el Arduino primero');
-            if (window.generatedData.length === 0) return alert('No hay tramas generadas.');
+            if (!isArduinoConnected || !writer) return notify('Conectá el Arduino primero', 'warning');
+            if (window.generatedData.length === 0) return notify('No hay tramas generadas.', 'warning');
 
             const btn = document.getElementById('btnSendArduino');
             btn.disabled = true; btn.innerHTML = 'Enviando...';
@@ -911,17 +1405,27 @@
                         await new Promise(r => setTimeout(r, 1000));
                     }
                 }
-                alert('✅ Envío a Arduino completado');
+                notify('✅ Envío a Arduino completado', 'success');
+
+                // Registro de Auditoría en Drive
+                if (window.registrarLogDeUso) {
+                    window.registrarLogDeUso({
+                        modulo: "Puntos de Ruta (RUS03+RUS04)",
+                        accion: "Envío por Arduino USB",
+                        unidades: window.lastUnidadesPtos,
+                        tramas: window.generatedData
+                    });
+                }
             } catch (e) {
-                alert('❌ Error USB: ' + e.message);
+                notify('❌ Error USB: ' + e.message, 'danger');
             } finally {
-                btn.disabled = false; btn.innerText = 'Enviar a Arduino';
+                btn.disabled = false; btn.innerText = 'Enviar';
             }
         }
 
         async function sendToArduinoSensado() {
-            if (!isArduinoConnected || !writer) return alert('Conecta el Arduino primero');
-            if (window.generatedSensado.length === 0) return alert('No hay tramas RUS04 generadas.');
+            if (!isArduinoConnected || !writer) return notify('Conectá el Arduino primero', 'warning');
+            if (window.generatedSensado.length === 0) return notify('No hay tramas RUS04 generadas.', 'warning');
 
             const btn = document.getElementById('btnSendArduinoSensado');
             btn.disabled = true; btn.innerHTML = 'Enviando...';
@@ -935,16 +1439,26 @@
                         await new Promise(r => setTimeout(r, 1000));
                     }
                 }
-                alert('✅ Envío a Arduino completado');
+                notify('✅ Envío a Arduino completado', 'success');
+
+                // Registro de Auditoría en Drive
+                if (window.registrarLogDeUso) {
+                    window.registrarLogDeUso({
+                        modulo: "Sensado (Solo RUS04)",
+                        accion: "Envío por Arduino USB",
+                        unidades: window.lastUnidadesSensado,
+                        tramas: window.generatedSensado
+                    });
+                }
             } catch (e) {
-                alert('❌ Error USB: ' + e.message);
+                notify('❌ Error USB: ' + e.message, 'danger');
             } finally {
-                btn.disabled = false; btn.innerText = 'Enviar a Arduino';
+                btn.disabled = false; btn.innerText = 'Enviar';
             }
         }
 
         async function sendToLocalAgent() {
-            if (window.generatedData.length === 0) return alert('No hay datos procesados para enviar.');
+            if (window.generatedData.length === 0) return notify('No hay datos procesados para enviar.', 'warning');
 
             const btn = document.getElementById('btnSendAgent');
             const statusLabel = document.getElementById('agentStatus');
@@ -954,7 +1468,7 @@
             try {
                 await fetch('http://127.0.0.1:5000/status');
             } catch (e) {
-                alert('❌ Agente local no encontrado. Ejecuta el .exe primero.');
+                notify('❌ Agente local no encontrado. Ejecutá el .exe primero.', 'danger');
                 statusLabel.textContent = 'Offline';
                 return;
             }
@@ -971,21 +1485,32 @@
                 const res = await response.json();
 
                 if (response.ok) {
-                    alert(`✅ Agente: ${res.processed} líneas enviadas.`);
+                    notify(`✅ Agente: ${res.processed} líneas enviadas.`, 'success');
                     statusLabel.textContent = 'Online';
+                    statusLabel.className = 'badge bg-success';
+
+                    // Registro de Auditoría en Drive
+                    if (window.registrarLogDeUso) {
+                        window.registrarLogDeUso({
+                            modulo: "Puntos de Ruta (RUS03+RUS04)",
+                            accion: "Envío por Agente Local",
+                            unidades: window.lastUnidadesPtos,
+                            tramas: window.generatedData
+                        });
+                    }
                 } else {
                     throw new Error(res.error);
                 }
             } catch (e) {
-                alert('❌ Error Agente: ' + e.message);
+                notify('❌ Error Agente: ' + e.message, 'danger');
                 statusLabel.textContent = 'Error';
             } finally {
-                btn.disabled = false; btn.innerText = 'Enviar Script';
+                btn.disabled = false; btn.innerHTML = '<i class="bi bi-terminal"></i> Enviar Script al Agente';
             }
         }
 
         async function sendToLocalAgentSensado() {
-            if (window.generatedSensado.length === 0) return alert('No hay tramas RUS04 generadas.');
+            if (window.generatedSensado.length === 0) return notify('No hay tramas RUS04 generadas.', 'warning');
 
             const btn = document.getElementById('btnSendAgentSensado');
             const statusLabel = document.getElementById('agentStatusSensado');
@@ -995,438 +1520,4 @@
             try {
                 await fetch('http://127.0.0.1:5000/status');
             } catch (e) {
-                alert('❌ Agente local no encontrado. Ejecuta el .exe primero.');
-                statusLabel.textContent = 'Offline';
-                return;
-            }
-
-            btn.disabled = true; btn.innerHTML = 'Enviando...';
-            statusLabel.textContent = 'Enviando...';
-
-            try {
-                const response = await fetch('http://127.0.0.1:5000/enviar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ lines: window.generatedSensado })
-                });
-                const res = await response.json();
-
-                if (response.ok) {
-                    alert(`✅ Agente: ${res.processed} líneas enviadas.`);
-                    statusLabel.textContent = 'Online';
-                } else {
-                    throw new Error(res.error);
-                }
-            } catch (e) {
-                alert('❌ Error Agente: ' + e.message);
-                statusLabel.textContent = 'Error';
-            } finally {
-                btn.disabled = false; btn.innerText = 'Enviar Script';
-            }
-        }
-
-        const COL_UNIDAD = 14;
-        const COL_FECHA_HORA = 15;
-
-        const FORMATOS_FECHA = [
-            'YYYY-MM-DD', 'YYYY/MM/DD',
-            'DD/MM/YYYY', 'D/M/YYYY', 'DD-MM-YYYY', 'D-M-YYYY',
-            'DD/MM/YY', 'D/M/YY', 'DD-MM-YY', 'D-M-YY'
-        ];
-        const FORMATOS_HORA = ['HH:mm:ss', 'HH:mm', 'H:mm:ss', 'H:mm'];
-
-        const FORMATOS_FECHA_HORA = FORMATOS_FECHA
-            .flatMap(f => [f].concat(FORMATOS_HORA.flatMap(h => [`${f} ${h}`, `${f}T${h}`])))
-            .concat(['DDMMYYHHmmss']);
-
-        function parseFechaHora(value) {
-            if (value === null || value === undefined) return null;
-            if (value instanceof Date) {
-                const md = moment(value);
-                return md.isValid() ? md : null;
-            }
-
-            const texto = String(value).trim();
-            if (!texto) return null;
-
-            if (/^\d+([.,]\d+)?$/.test(texto)) {
-                const serial = parseFloat(texto.replace(',', '.'));
-                if (serial > 20000 && serial < 80000) {
-                    return moment('1899-12-30', 'YYYY-MM-DD').add(Math.round(serial * 86400), 'seconds');
-                }
-            }
-
-            const estricto = moment(texto.replace(/\s+/g, ' '), FORMATOS_FECHA_HORA, true);
-            if (estricto.isValid()) return estricto;
-
-            const libre = moment(texto);
-            return libre.isValid() ? libre : null;
-        }
-
-        const FORMATO_SALIDA = 'YYYY-MM-DD HH:mm';
-
-        // ==========================================
-        // CONSTANTES DEL PROTOCOLO
-        // ==========================================
-        const COLA_RUS03 = '29900000734261011';
-        const COLA_RUS04 = '29900000734261011';
-        const IP1_RUS03 = '000C';
-        const IP1_RUS04 = '000C';
-        const CODIGO_ENTRADA_DEFAULT = '001';
-        const ESTADO_ENTRADA_DEFAULT = '1';
-        const DESFASE_RUS04_SEGUNDOS = 2;
-
-        function encodeCoord(valor, digitos) {
-            const signo = valor < 0 ? '-' : '';
-            const n = Math.round(Math.abs(valor) * 100000);
-            return signo + String(n).padStart(digitos, '0').slice(-digitos);
-        }
-
-        function checksumTrama(cuerpo) {
-            let v = 0;
-            for (let i = 0; i < cuerpo.length; i++) v ^= cuerpo.charCodeAt(i) & 0xFF;
-            return v.toString(16).toUpperCase().padStart(2, '0');
-        }
-
-        function cerrarTrama(cuerpo) {
-            return cuerpo + checksumTrama(cuerpo) + '<';
-        }
-
-        function construirRus04(ts, latRaw, longRaw, imei, codigo, estado, id) {
-            const latStr = encodeCoord(latRaw, 7);
-            const longStr = encodeCoord(longRaw, 8);
-            const cuerpo = `>RUS04,${ts}${latStr}${longStr}${COLA_RUS04},${imei},${codigo},${estado};ID=${id};#IP1:${IP1_RUS04};*`;
-            return cerrarTrama(cuerpo);
-        }
-
-        function fechaDeFila(row) {
-            return parseFechaHora(row[COL_FECHA_HORA]);
-        }
-
-        function unidadDeFila(row) {
-            const valor = row[COL_UNIDAD];
-            if (valor === null || valor === undefined) return null;
-            const texto = String(valor).trim();
-            return texto || null;
-        }
-
-        function textoCorto(valor, largo = 40) {
-            const texto = valor ? String(valor).trim() : '(sin ruta)';
-            return texto.length > largo ? texto.substring(0, largo - 3) + '...' : texto;
-        }
-
-        function pedirDatosFaltantes(modal, ctx) {
-            const unidadBlock = document.getElementById('unidadBlock');
-            const fechasBlock = document.getElementById('fechasBlock');
-            const avisoFechas = document.getElementById('fechasDetectadas');
-            const btnOk = document.getElementById('submitRoute');
-            const btnSkip = document.getElementById('skipRoute');
-
-            document.getElementById('routeForm').reset();
-            document.getElementById('filaActualText').innerText = `${ctx.numeroFila} — ${textoCorto(ctx.direccion)}`;
-            document.getElementById('rutaActualText').innerText = textoCorto(ctx.ruta);
-
-            unidadBlock.classList.toggle('d-none', !ctx.faltaUnidad);
-            fechasBlock.classList.toggle('d-none', !ctx.faltaFecha);
-            avisoFechas.classList.toggle('d-none', ctx.faltaFecha);
-
-            if (!ctx.faltaFecha) {
-                document.getElementById('fechasDetectadasText').innerText = ctx.fecha.format(FORMATO_SALIDA);
-            } else {
-                document.getElementById('fechaHora').value = moment().format('YYYY-MM-DDTHH:mm');
-            }
-
-            return new Promise(resolve => {
-                const cerrar = (valor) => {
-                    btnOk.removeEventListener('click', onOk);
-                    btnSkip.removeEventListener('click', onSkip);
-                    modal.hide();
-                    setTimeout(() => resolve(valor), 300);
-                };
-
-                const onOk = () => {
-                    const aplicarRestantes = document.getElementById('aplicarRestantes').checked;
-                    let unidad = null, fecha = null;
-
-                    if (ctx.faltaUnidad) {
-                        unidad = document.getElementById('unidad').value.trim();
-                        if (!unidad) { alert('Indica la unidad asignada'); return; }
-                    }
-
-                    if (ctx.faltaFecha) {
-                        const valor = document.getElementById('fechaHora').value;
-                        fecha = parseFechaHora(valor);
-                        if (!fecha) { alert('Completa la fecha y hora'); return; }
-                    }
-
-                    cerrar({ unidad: unidad, fecha: fecha, aplicarRestantes: aplicarRestantes });
-                };
-
-                const onSkip = () => cerrar(null);
-
-                btnOk.addEventListener('click', onOk);
-                btnSkip.addEventListener('click', onSkip);
-                modal.show();
-            });
-        }
-
-        // ==========================================
-        // PROCESAMIENTO PRINCIPAL (Puntos de Ruta)
-        // ==========================================
-        async function verificarDatos() {
-            showLoading(true, "Verificando líneas...");
-            window.generatedData = [];
-
-            const rus04Keys = new Set();
-            let rus04Duplicados = 0;
-
-            try {
-                const allData = window.ptosHot.getData();
-                const data = allData.slice(1).filter(r => r[0] && r[0].toString().trim() !== '');
-
-                if (data.length === 0) throw new Error('Tabla vacía o sin datos válidos.');
-
-                const modalElement = document.getElementById('routeModal');
-                const modal = new bootstrap.Modal(modalElement, { backdrop: 'static', keyboard: false });
-
-                showLoading(false);
-
-                const pendientes = [];
-                const omitidas = [];
-                const porDefectoRuta = {};
-
-                for (const row of data) {
-                    const realIdx = allData.indexOf(row);
-                    const numeroFila = realIdx + 1;
-                    const ruta = row[5] ? row[5].toString().trim() : '';
-
-                    if (!row[12] || !row[13]) {
-                        omitidas.push(`Fila ${numeroFila}: sin latitud/longitud`);
-                        continue;
-                    }
-
-                    const reusable = porDefectoRuta[ruta] || {};
-                    let unidad = unidadDeFila(row) || reusable.unidad || null;
-                    let fecha = fechaDeFila(row) || (reusable.fecha ? reusable.fecha.clone() : null);
-
-                    if (!unidad || !fecha) {
-                        const respuesta = await pedirDatosFaltantes(modal, {
-                            numeroFila: numeroFila,
-                            direccion: row[0],
-                            ruta: ruta,
-                            faltaUnidad: !unidad,
-                            faltaFecha: !fecha,
-                            fecha: fecha
-                        });
-
-                        if (!respuesta) {
-                            omitidas.push(`Fila ${numeroFila}: omitida por el usuario`);
-                            continue;
-                        }
-
-                        unidad = unidad || respuesta.unidad;
-                        fecha = fecha || respuesta.fecha;
-
-                        if (respuesta.aplicarRestantes) {
-                            porDefectoRuta[ruta] = {
-                                unidad: respuesta.unidad || reusable.unidad,
-                                fecha: respuesta.fecha || reusable.fecha
-                            };
-                        }
-                    }
-
-                    pendientes.push({ row: row, realIdx: realIdx, unidad: unidad, fecha: fecha });
-                }
-
-                showLoading(true, "Generando tramas...");
-                let logText = '';
-                let totalRus04 = 0, totalRus03 = 0;
-
-                const baseData = window.baseHot.getData();
-
-                pendientes.forEach((item) => {
-                    const row = item.row;
-                    const realIdx = item.realIdx;
-
-                    window.ptosHot.setDataAtCell(realIdx, COL_UNIDAD, item.unidad);
-                    window.ptosHot.setDataAtCell(realIdx, COL_FECHA_HORA, item.fecha.format(FORMATO_SALIDA));
-
-                    const lat = parseFloat(row[12]), long = parseFloat(row[13]);
-                    const procLat = encodeCoord(lat, 7);
-                    const procLong = encodeCoord(long, 8);
-
-                    const horaBase = item.fecha.clone().add(3, 'hours');
-                    const horaRus04 = horaBase.clone().add(DESFASE_RUS04_SEGUNDOS, 'seconds');
-
-                    const uRow = baseData.find(x => x[0] == item.unidad);
-                    const imei = uRow ? uRow[1] : '#N/A';
-                    const id = uRow ? uRow[2] : '#N/A';
-
-                    const ts03 = horaBase.format('DDMMYYHHmmss');
-                    const ts04 = horaRus04.format('DDMMYYHHmmss');
-
-                    const rus03 = cerrarTrama(`>RUS03,${ts03}${procLat}${procLong}${COLA_RUS03},${imei},0000000${row[4] || '0'},001;ID=${id};#IP1:${IP1_RUS03};*`);
-
-                    const rus04 = construirRus04(ts04, lat, long, imei, CODIGO_ENTRADA_DEFAULT, ESTADO_ENTRADA_DEFAULT, id);
-
-                    logText += `Fila ${realIdx + 1} | Unidad ${item.unidad} | ${item.fecha.format(FORMATO_SALIDA)}\n`;
-
-                    const claveRus04 = `RUS04|${imei}|${ts04}|${CODIGO_ENTRADA_DEFAULT}|${ESTADO_ENTRADA_DEFAULT}`;
-                    if (!rus04Keys.has(claveRus04)) {
-                        rus04Keys.add(claveRus04);
-                        window.generatedData.push(rus04);
-                        totalRus04++;
-                        logText += `  ${rus04}\n`;
-                    } else {
-                        rus04Duplicados++;
-                        logText += `  (RUS04 duplicado para ${imei} @ ${ts04}, omitido)\n`;
-                    }
-
-                    window.generatedData.push(rus03);
-                    totalRus03++;
-                    logText += `  ${rus03}\n`;
-                });
-
-                window.ptosHot.render();
-
-                const resumen = `✅ ${totalRus03} líneas procesadas — ${window.generatedData.length} tramas listas para enviar ` +
-                    `(${totalRus03} RUS03 + ${totalRus04} RUS04${rus04Duplicados > 0 ? `, ${rus04Duplicados} duplicados omitidos` : ''})`;
-
-                logText = `${resumen}\n\n` + logText;
-
-                if (omitidas.length > 0) {
-                    logText += `\n--- ${omitidas.length} fila(s) sin procesar ---\n` + omitidas.join('\n') + '\n';
-                }
-
-                logConsole(logText.trim() || 'Ningún dato generado.');
-
-                if (window.generatedData.length > 0) {
-                    document.getElementById('btnSendAgent').disabled = false;
-                    if (isArduinoConnected) document.getElementById('btnSendArduino').disabled = false;
-                }
-
-                alert(`${totalRus03} líneas procesadas.\n${window.generatedData.length} tramas listas para enviar ` +
-                    `(${totalRus03} RUS03 + ${totalRus04} RUS04` +
-                    (rus04Duplicados > 0 ? `, ${rus04Duplicados} duplicados omitidos` : '') + `).` +
-                    (omitidas.length > 0 ? `\n⚠️ ${omitidas.length} fila(s) sin procesar (ver consola).` : ''));
-
-            } catch (e) {
-                alert("❌ Error en la verificación: " + e.message);
-                console.error(e);
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ==========================================
-        // PROCESAMIENTO SENSADO (solo RUS04)
-        // ==========================================
-        async function generarRus04() {
-            if (!window.sensadoHot) return alert('Tabla de Sensado no inicializada.');
-
-            window.generatedSensado = [];
-
-            const allData = window.sensadoHot.getData();
-            const data = allData.slice(1).filter(r => r[0] && r[0].toString().trim() !== '');
-
-            if (data.length === 0) return alert('La tabla de Sensado está vacía.');
-
-            const baseData = window.baseHot ? window.baseHot.getData() : [];
-
-            let logText = '';
-            let total = 0;
-            const omitidas = [];
-
-            for (const row of data) {
-                const realIdx = allData.indexOf(row);
-                const numeroFila = realIdx + 1;
-
-                if (!row[12] || !row[13]) {
-                    omitidas.push(`Fila ${numeroFila}: sin latitud/longitud`);
-                    continue;
-                }
-
-                const unidad = row[14] !== null && row[14] !== undefined ? String(row[14]).trim() : '';
-                const fecha = parseFechaHora(row[15]);
-
-                if (!unidad) {
-                    omitidas.push(`Fila ${numeroFila}: sin unidad`);
-                    continue;
-                }
-                if (!fecha) {
-                    omitidas.push(`Fila ${numeroFila}: sin fecha válida`);
-                    continue;
-                }
-
-                const lat = parseFloat(row[12]);
-                const long = parseFloat(row[13]);
-                if (isNaN(lat) || isNaN(long)) {
-                    omitidas.push(`Fila ${numeroFila}: lat/long inválidas`);
-                    continue;
-                }
-
-                const uRow = baseData.find(x => x[0] == unidad);
-                const imei = uRow ? uRow[1] : '#N/A';
-                const id = uRow ? uRow[2] : '#N/A';
-
-                const horaBase = fecha.clone().add(3, 'hours');
-                const horaRus04 = horaBase.clone().add(DESFASE_RUS04_SEGUNDOS, 'seconds');
-                const ts04 = horaRus04.format('DDMMYYHHmmss');
-
-                const rus04 = construirRus04(ts04, lat, long, imei, CODIGO_ENTRADA_DEFAULT, ESTADO_ENTRADA_DEFAULT, id);
-
-                window.generatedSensado.push(rus04);
-                total++;
-                logText += `Fila ${numeroFila} | Unidad ${unidad} | ${fecha.format(FORMATO_SALIDA)}\n  ${rus04}\n`;
-            }
-
-            const resumen = `✅ ${total} RUS04 generados — ${window.generatedSensado.length} tramas listas para enviar`;
-            logText = `${resumen}\n\n${logText}`;
-
-            if (omitidas.length > 0) {
-                logText += `\n--- ${omitidas.length} fila(s) sin procesar ---\n` + omitidas.join('\n') + '\n';
-            }
-
-            logConsoleSensado(logText.trim() || 'Ningún dato generado.');
-
-            if (window.generatedSensado.length > 0) {
-                document.getElementById('btnSendAgentSensado').disabled = false;
-                if (isArduinoConnected) document.getElementById('btnSendArduinoSensado').disabled = false;
-            }
-
-            alert(`${total} RUS04 generados.` +
-                (omitidas.length > 0 ? `\n⚠️ ${omitidas.length} fila(s) sin procesar (ver consola).` : ''));
-        }
-
-        function limpiarSensado() {
-            if (!window.sensadoHot) return;
-            if (!confirm('¿Borrar todo el contenido de la tabla de Sensado?')) return;
-            window.sensadoHot.loadData([['Dirección', 'Punto de recolección', 'Mobiliario urbano', 'Tipo', 'Tag', 'Rutas', 'Total', 'Pendientes', 'Promedio', 'Servicios', 'No Op', 'Cumplimiento', 'Latitud', 'Longitud', 'Unidad', 'Fecha y hora']]);
-            window.generatedSensado = [];
-            document.getElementById('btnSendAgentSensado').disabled = true;
-            document.getElementById('btnSendArduinoSensado').disabled = true;
-            logConsoleSensado('Tabla limpiada.');
-        }
-
-        function logConsole(text) {
-            const out = document.getElementById('output');
-            out.innerText = text;
-            out.scrollTop = out.scrollHeight;
-        }
-
-        function logConsoleSensado(text) {
-            const out = document.getElementById('outputSensado');
-            if (!out) return;
-            out.innerText = text;
-            out.scrollTop = out.scrollHeight;
-        }
-
-        const processData = verificarDatos;
-
-        document.addEventListener('DOMContentLoaded', () => {
-        });
-
-    </script>
-</body>
-
-</html>
+                notify('❌ Agente local no encontrado. Ejecutá el .exe primero.',
