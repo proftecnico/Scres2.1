@@ -331,7 +331,6 @@
             justify-content: center;
         }
 
-        /* Cuadrícula Handsontable idéntica a la versión que funcionaba */
         #ptos-table,
         #base-table,
         #sensado-table {
@@ -343,7 +342,6 @@
             z-index: 1;
         }
 
-        /* Resaltar encabezados de la fila 1 de la tabla */
         .handsontable tbody tr:first-child td {
             background-color: #f1f5f9;
             font-weight: 700;
@@ -690,14 +688,14 @@
                         </div>
 
                         <div class="d-none" id="fechasBlock">
-                            <label class="form-label small fw-bold text-muted">FECHA Y HORA</label>
+                            <label class="form-label small fw-bold text-muted">FECHA Y HORA BASE</label>
                             <input type="datetime-local" class="form-control" id="fechaHora">
                         </div>
 
                         <div class="form-check mt-3">
                             <input class="form-check-input" type="checkbox" id="aplicarRestantes" checked>
                             <label class="form-check-label small" for="aplicarRestantes">
-                                Aplicar estos datos a las demás filas de esta ruta a las que les falte lo mismo
+                                Aplicar a las demás filas de esta ruta (generando horarios aleatorios hasta +3 hs desde la hora base)
                             </label>
                         </div>
                     </form>
@@ -715,7 +713,7 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 
     <!-- ============================================================ -->
-    <!-- SCRIPT UNIFICADO (EVITA ERRORES DE ORDEN DE CARGA)            -->
+    <!-- SCRIPT UNIFICADO                                              -->
     <!-- ============================================================ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -748,9 +746,6 @@
         window.lastUnidadesSensado = [];
         window.role = '';
 
-        // ------------------------------------------------------------
-        // FUNCIONES DE UI Y TABLAS (Declaradas antes de Firebase Auth)
-        // ------------------------------------------------------------
         function showLoading(show, text = "Cargando...") {
             const el = document.getElementById('loading');
             if (!el) return;
@@ -866,9 +861,6 @@
             refreshHotForTab(target);
         });
 
-        // ------------------------------------------------------------
-        // FUNCIÓN DE ENVÍO DE LOG A TU GOOGLE DRIVE Y FIRESTORE
-        // ------------------------------------------------------------
         window.registrarLogDeUso = async ({ modulo, accion, tramas = [], unidades = [] }) => {
             const fechaHora = moment().format('DD/MM/YYYY HH:mm:ss');
             const timestampISO = new Date().toISOString();
@@ -885,7 +877,6 @@
                 tramas: tramas
             };
 
-            // 1. Guardar en Firebase Firestore
             if (db) {
                 try {
                     await addDoc(collection(db, "logs_uso"), payload);
@@ -894,7 +885,6 @@
                 }
             }
 
-            // 2. Enviar a tu Google Drive personal vía Apps Script
             if (GOOGLE_DRIVE_WEBHOOK_URL) {
                 try {
                     await fetch(GOOGLE_DRIVE_WEBHOOK_URL, {
@@ -963,9 +953,6 @@
             }
         };
 
-        // ------------------------------------------------------------
-        // INICIALIZACIÓN DE FIREBASE
-        // ------------------------------------------------------------
         try {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
@@ -1103,9 +1090,6 @@
             }
         };
 
-        // ------------------------------------------------------------
-        // COMUNICACIÓN ARDUINO Y AGENTE LOCAL
-        // ------------------------------------------------------------
         let port, writer;
         let isArduinoConnected = false;
 
@@ -1401,6 +1385,14 @@
             return texto.length > largo ? texto.substring(0, largo - 3) + '...' : texto;
         }
 
+        // Genera una fecha aleatoria sumando entre 1 minuto (60 s) y 3 horas (10800 s) a la fecha base
+        function generarFechaAleatoria3Hs(fechaBase) {
+            const minSegundos = 60;
+            const maxSegundos = 3 * 3600; // 10.800 segundos = 3 horas
+            const offsetSegundos = Math.floor(Math.random() * (maxSegundos - minSegundos + 1)) + minSegundos;
+            return fechaBase.clone().add(offsetSegundos, 'seconds');
+        }
+
         function pedirDatosFaltantes(modal, ctx) {
             const unidadBlock = document.getElementById('unidadBlock');
             const fechasBlock = document.getElementById('fechasBlock');
@@ -1455,13 +1447,7 @@
                 modal.show();
             });
         }
-// Genera una nueva fecha sumando entre 1 minuto (60 s) y 3 horas (10800 s) al azar
-function generarFechaAleatoria3Hs(fechaBase) {
-    const minSegundos = 60;          // Mínimo 1 minuto para que no coincida con la hora base
-    const maxSegundos = 3 * 3600;    // Máximo 3 horas (10.800 segundos)
-    const offsetSegundos = Math.floor(Math.random() * (maxSegundos - minSegundos + 1)) + minSegundos;
-    return fechaBase.clone().add(offsetSegundos, 'seconds');
-}
+
         window.verificarDatos = async () => {
             showLoading(true, "Verificando líneas...");
             window.generatedData = [];
@@ -1497,11 +1483,7 @@ function generarFechaAleatoria3Hs(fechaBase) {
 
                     const reusable = porDefectoRuta[ruta] || {};
                     let unidad = unidadDeFila(row) || reusable.unidad || null;
-                    const reusable = porDefectoRuta[ruta] || {};
-let unidad = unidadDeFila(row) || reusable.unidad || null;
-
-// Si la fila no tiene fecha pero ya hay una fecha base para la ruta, le suma un tiempo aleatorio <= 3 hs
-let fecha = fechaDeFila(row) || (reusable.fecha ? generarFechaAleatoria3Hs(reusable.fecha) : null);
+                    let fecha = fechaDeFila(row) || (reusable.fecha ? generarFechaAleatoria3Hs(reusable.fecha) : null);
 
                     if (!unidad || !fecha) {
                         const respuesta = await pedirDatosFaltantes(modal, {
@@ -1604,7 +1586,6 @@ let fecha = fechaDeFila(row) || (reusable.fecha ? generarFechaAleatoria3Hs(reusa
                     document.getElementById('btnSendAgent').disabled = false;
                     if (isArduinoConnected) document.getElementById('btnSendArduino').disabled = false;
 
-                    // Guardar log en Google Drive personal y Firestore
                     window.registrarLogDeUso({
                         modulo: "Puntos de Ruta",
                         accion: "Verificación y Generación",
