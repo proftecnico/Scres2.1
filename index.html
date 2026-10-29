@@ -1455,7 +1455,13 @@
                 modal.show();
             });
         }
-
+// Genera una nueva fecha sumando entre 1 minuto (60 s) y 3 horas (10800 s) al azar
+function generarFechaAleatoria3Hs(fechaBase) {
+    const minSegundos = 60;          // Mínimo 1 minuto para que no coincida con la hora base
+    const maxSegundos = 3 * 3600;    // Máximo 3 horas (10.800 segundos)
+    const offsetSegundos = Math.floor(Math.random() * (maxSegundos - minSegundos + 1)) + minSegundos;
+    return fechaBase.clone().add(offsetSegundos, 'seconds');
+}
         window.verificarDatos = async () => {
             showLoading(true, "Verificando líneas...");
             window.generatedData = [];
