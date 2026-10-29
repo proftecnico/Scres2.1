@@ -1497,7 +1497,11 @@ function generarFechaAleatoria3Hs(fechaBase) {
 
                     const reusable = porDefectoRuta[ruta] || {};
                     let unidad = unidadDeFila(row) || reusable.unidad || null;
-                    let fecha = fechaDeFila(row) || (reusable.fecha ? reusable.fecha.clone() : null);
+                    const reusable = porDefectoRuta[ruta] || {};
+let unidad = unidadDeFila(row) || reusable.unidad || null;
+
+// Si la fila no tiene fecha pero ya hay una fecha base para la ruta, le suma un tiempo aleatorio <= 3 hs
+let fecha = fechaDeFila(row) || (reusable.fecha ? generarFechaAleatoria3Hs(reusable.fecha) : null);
 
                     if (!unidad || !fecha) {
                         const respuesta = await pedirDatosFaltantes(modal, {
